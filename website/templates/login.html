@@ -1,0 +1,45 @@
+{% extends "base.html" %} {% block title %}Login {% endblock %} {% block content
+%}
+<div class="mt-2 center" style="display: flex; flex-wrap: wrap">
+  <div style="flex: 1; margin: auto">
+    <button
+      style="outline: none; border: 0; background: none"
+      onclick="location.href='/signup'"
+    >
+      <img
+        src="/static/images/beer_landing_page_small_size.png"
+        class="logo-picture"
+      />
+    </button>
+  </div>
+  <form class="text-style" method="POST">
+    <div class="form-group">
+      <label for="email">E-Mail</label>
+      <input
+        type="email"
+        class="mt-2 list-column form-control"
+        id="email"
+        name="email"
+      />
+      <label for="password">Password</label>
+      <input
+        type="password"
+        class="mt-2 list-column form-control"
+        id="password"
+        name="password"
+      />
+      <button
+        type="submit"
+        class="form-control mt-4 list-column text-type btn btn-primary"
+      >
+        Login
+      </button>
+    </div>
+  </form>
+</div>
+<br />
+<br />
+<br />
+<br />
+
+{% endblock %}

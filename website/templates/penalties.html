@@ -1,0 +1,75 @@
+{% extends "base.html" %} {% block title %}Penalties{% endblock %} {% block
+content %}
+<div style="display: flex; flex-wrap: wrap">
+  <div style="flex: 1; margin: auto; padding: 15px">
+    <button
+      style="outline: none; border: 0; background: none"
+      onclick="location.href='/'"
+    >
+      <img
+        src="/static/images/beer_landing_page_small_size.png"
+        class="logo-picture"
+      />
+    </button>
+  </div>
+</div>
+<div class="center col-md-6">
+  <form
+    class="form-group text-style center"
+    action="{{ url_for('configure.new_penalty') }}"
+    method="POST"
+  >
+    <label for="title">Title: </label>
+    <input
+      type="text"
+      id="title"
+      name="title"
+      class="form-control list-column"
+    />
+    <label for="pay_amount">Pay Amount:</label>
+    <input
+      type="text"
+      id="pay_amount"
+      name="pay_amount"
+      pattern="^[0-9]+(\.[0-9]{1,2})?$|^[0-9]{1,3}(,[0-9]{3})*(\.[0-9]{1,2})?$"
+      required
+      title="Please enter a valid pay amount in the format 0.20 or 0,20"
+      class="form-control list-column"
+    />
+    <button class="list-column mt-4 btn btn-primary" type="submit">
+      Create Penalty
+    </button>
+  </form>
+</div>
+<div class="table-responsive">
+  <table
+    class="table table-responsivelist-column form-check form-check-label"
+    width="100%"
+  >
+    <thead style="width: 100%">
+      <tr class="text-center text-style">
+        <th>Title</th>
+        <th>Fine</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody style="width: 100%">
+      {% for penalty in all_penalties %}
+      <tr class="text-center text-style" style="white-space: nowrap">
+        <td>{{ penalty.title }}</td>
+        <td>{{ penalty.pay_amount}} €</td>
+        <td>
+          <form
+            action="{{ url_for('configure.delete_penalty', penalty_id=penalty.id) }}"
+            method="POST"
+          >
+            <input type="hidden" name="id" value="{{ penalty.id }}" />
+            <button type="submit" class="penalty-button btn-danger">X</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

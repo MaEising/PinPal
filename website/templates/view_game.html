@@ -1,0 +1,75 @@
+{% extends "base.html" %} {% block title %} Kegelabend {{
+game.date_created.strftime('%Y-%m-%d') }} {% endblock %} {% block content %}
+<script src="/static/js/game_configuration.js"></script>
+<table class="table table-responsive">
+  <thead>
+    <tr class="text-center text-style">
+      <th>Spieler</th>
+      {% for penalty in all_penalties %}
+      <th>{{ penalty.title }}</th>
+      {% endfor %}
+      <th>Spieler</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for player_record in player_record_list %}
+    <tr class="text-center text-style">
+      <td style="vertical-align: middle">{{player_record.participant_name}}</td>
+      {% for penalty in player_record.penalties %}
+      <td style="min-width: 150px">
+        <div
+          id="{{player_record.game_id}}-{{penalty.id}}-{{player_record.participant_id}}-penalty-quantity"
+        >
+          {{penalty.penalty_quantity}}
+        </div>
+        <button
+          id="{{player_record.game_id}}-{{ penalty.id}}-{{player_record.participant_id}}-add"
+          onclick="update_quantity('{{ player_record.game_id }}-{{ penalty.id}}-{{player_record.participant_id}}-add')"
+          class="quantity-up-button"
+          style="height: 40px; width: 40px; background-color: lightgreen"
+          type="submit"
+        >
+          &#43;
+        </button>
+        <button
+          id="{{player_record.game_id}}-{{ penalty.id}}-{{player_record.participant_id}}-subtract"
+          onclick="update_quantity('{{ player_record.game_id }}-{{ penalty.id}}-{{player_record.participant_id}}-subtract')"
+          class="quantity-down-button"
+          style="height: 40px; width: 40px; background-color: #f87217"
+          type="submit"
+        >
+          &#8722;
+        </button>
+      </td>
+      {% endfor %}
+      <td style="vertical-align: middle">{{player_record.participant_name}}</td>
+    </tr>
+    {% endfor%}
+    <tr style="font-weight: bold" class="text-center text-style">
+      <td style="vertical-align: middle">Spieler</td>
+      {% for penalty in all_penalties %}
+      <td style="vertical-align: middle">{{penalty.title}}</td>
+      {% endfor %}
+      <td style="vertical-align: middle">Spieler</td>
+    </tr>
+  </tbody>
+</table>
+<form
+  action="{{ url_for('configure.save_game', game_id = game.id) }}"
+  method="POST"
+>
+  <button type="submit" class="mb-4 game-save-btn btn-primary">
+    Speichern
+  </button>
+</form>
+<form
+  action="{{ url_for('configure.finish_game', game_id = game.id) }}"
+  method="POST"
+>
+  <button type="submit" class="mb-4 game-finish-btn btn-primary">
+    Abend beenden
+  </button>
+</form>
+<br />
+<br />
+{% endblock %}

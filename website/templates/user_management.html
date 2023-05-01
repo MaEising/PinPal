@@ -1,0 +1,77 @@
+{% extends "base.html" %} {% block title %} Spielermanagement {% endblock %} {%
+block content %}
+<div class="mt-4 center">
+  <button
+    style="outline: none; border: 0; background: none"
+    onclick="location.href='/'"
+  >
+    <img
+      src="/static/images/beer_landing_page_small_size.png"
+      class="logo-picture"
+    />
+  </button>
+  <form
+    action="{{ url_for('configure.new_users') }}"
+    method="POST"
+    class="center"
+  >
+    <label
+      class="mb-4 mt-4"
+      style="
+        font-family: 'Poppins';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 30px;
+        line-height: 30px;
+        color: #000000;
+      "
+      for="username"
+      >Username:</label
+    ><br />
+    <input
+      class="form-control list-column"
+      type="text"
+      id="username"
+      name="username"
+    /><br />
+    <button
+      id="username"
+      type="submit"
+      class="mt-2 list-column btn btn-primary mb-4"
+    >
+      Spieler hinzufügen
+    </button>
+  </form>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr class="text-center text-style">
+          <th>Username</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for participant in participants %}
+        <tr class="text-center text-style">
+          <td>{{ participant.username }}</td>
+          <td>
+            <form
+              action="{{ url_for('configure.delete_participant', participant_id = participant.id) }}"
+              method="POST"
+            >
+              <input type="hidden" name="id" value="{{ participant.id }}" />
+              <button type="submit" class="user-delete-btn btn btn-danger">
+                X
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<br />
+<br />
+<br />
+{% endblock %}

@@ -1,0 +1,234 @@
+body {
+  background-color: white;
+}
+
+.navbar {
+  background-color: #e79a27 !important;
+}
+.navbar a {
+  color: #fff; /* change the color of the links */
+}
+
+.navbar .dropdown-menu {
+  background-color: #e79a27 !important; /* change the background color of the dropdown menu */
+}
+.container {
+  position: relative;
+  min-height: 100%;
+  width: 390px;
+  height: 844px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  border: 3px solid rgb(0, 0, 0);
+  border-radius: 25px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.column {
+  flex: 0 0 33.3333%;
+}
+.checkbox {
+  width: 30px;
+  height: 30px;
+  border: 2px solid black;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.list-column {
+  border: 3px solid rgb(0, 0, 0);
+  border-radius: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.logo-picture {
+  height: 350px;
+  width: 350px;
+}
+
+table {
+  table-layout: fixed;
+}
+th {
+  width: 100%;
+}
+td {
+  width: 100%;
+  text-align: center;
+}
+
+td:first-child {
+  width: 100%;
+  text-align: center;
+}
+
+table input[type="text"] {
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+}
+
+table.border {
+  border: 3px solid #000000;
+  border-radius: 10px;
+}
+.text-style {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  align-items: center;
+
+  color: #000000;
+}
+
+.form-control {
+  width: 237px;
+  height: 64px;
+}
+
+.footer {
+  width: 390px;
+
+  box-sizing: border-box;
+
+  height: 64px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+
+  background: #e79a27;
+  border: 3px solid #000000;
+  border-radius: 5px;
+}
+
+.footer-column {
+  margin: auto;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  color: #000000;
+}
+
+.label {
+  margin-bottom: 0px;
+}
+
+/* ############################## BUTTONS ############################## */
+.btn {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+
+  width: 237px;
+  height: 64px;
+
+  color: #ffffff;
+
+  border: 3px solid rgb(0, 0, 0);
+  border-radius: 25px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.penalty-btn {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+
+  width: 110px;
+  height: 64px;
+
+  color: #ffffff;
+
+  border: 3px solid rgb(0, 0, 0);
+  border-radius: 25px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.user-delete-btn {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+  margin-left: 40px;
+  width: 64px;
+  height: 64px;
+
+  color: #ffffff;
+
+  border: 3px solid rgb(0, 0, 0);
+  border-radius: 25px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.quantity-up-button,
+.quantity-down-button {
+  padding: 8px 12px;
+  border: none;
+  color: black;
+}
+.game-save-btn {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 30px;
+  border: 3px solid rgb(0, 0, 0);
+  width: 158px;
+  height: 64px;
+  margin-right: 1.5px;
+}
+.game-save-btn:hover {
+  background-color: #e79a27;
+  border: 3px solid rgb(0, 0, 0);
+}
+.game-finish-btn {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 30px;
+  border: 3px solid rgb(0, 0, 0);
+  width: 158px;
+  height: 64px;
+}
+.game-finish-btn:target {
+  background-color: lightgreen;
+  border: 3px solid rgb(0, 0, 0);
+}
+
+.archived_game_button {
+  background: none;
+  border: none;
+}
+
+.archived_game_button:hover {
+  text-decoration: underline;
+  color: rgb(0, 0, 0);
+}
+/* ############################## BUTTONS ############################## */
