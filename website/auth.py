@@ -3,8 +3,11 @@ from .models import UserEntity
 from werkzeug.security import generate_password_hash, check_password_hash # store password as hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
-
+from .logger_config import setup_logger
 auth = Blueprint('auth', __name__)
+
+
+logger = setup_logger()
 
 @auth.route('/login', methods=['GET','POST'])
 def login():
@@ -17,6 +20,7 @@ def login():
             if check_password_hash(user.password, password):
                 flash('Logged in successfully', category='success')
                 login_user(user, remember=True)
+                logger.info("User {} login".format(current_user.email))
                 return redirect(url_for('views.home'))
             else:
                 flash('incorrect password, try again.',category='error')
@@ -27,6 +31,7 @@ def login():
 @auth.route('/logout')
 @login_required
 def logout():
+    logger.info("User {} logout".format(current_user.email))
     logout_user()
     return redirect(url_for('auth.login'))
 
@@ -37,7 +42,6 @@ def sign_up():
         first_name = request.form.get('firstName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
-
         user = UserEntity.query.filter_by(email=email).first()
         if user:
             flash('User with this email already exists', category='error')
@@ -54,7 +58,9 @@ def sign_up():
             user = UserEntity(email=email,first_name=first_name,password=generate_password_hash(password1, method='sha256'))
             db.session.add(user)
             db.session.commit()
+            logger.info("User {} registered".format(email))
             flash('Account created', category='success')
             login_user(user, remember=True)
+            logger.info("User {} login".format(email))
             return redirect(url_for('views.home'))
     return render_template("signup.html", user=current_user)

@@ -1,84 +1,68 @@
 import logging
 import sys
-
-# file logger
-#file_handler = FileHandler('/path/to/file.log')
-#file_handler.setLevel(logging.DEBUG)
-#file_handler.setFormatter(formatter)
-#logger.addHandler(file_handler)
-#logger.removeHandler(logger.handlers[0]) # remove old handler outputting through stdout
-
-
-
-# def setup_logger():
-#     # Create logger
-#     logger = logging.getLogger(__name__)
-#     logger.setLevel(logging.INFO) # only equal or higher than this level will be logged
-
-#     # Create console handler and set level to debug
-#     console_handler = logging.StreamHandler(sys.stdout)
-#     console_handler.setLevel(logging.INFO) # only equal or higher than this level will be logged
-
-#     # Create formatter
-#     formatter = logging.Formatter('%(asctime)s - %(filename)s:%(lineno)s - %(levelname)s - %(message)s')
-
-#     # Add formatter to console handler
-#     console_handler.setFormatter(formatter)
-
-#     # Add console handler to logger
-#     logger.addHandler(console_handler)
-
-#     return logger
-
-
-
-import logging.config
+import logging.handlers
 import os
+import logging.config
 
+# Define a function to set up the logger
 def setup_logger():
+    # Set the path for the log file
     log_file_path = os.path.join(os.path.dirname(__file__), 'logs', 'app.log')
+    # Create the directories for the log file if they do not exist
     os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
-
+    # Configure the logger using a dictionary
     logging.config.dictConfig({
+        # Set the logging version
         'version': 1,
+        # Disable existing loggers
         'disable_existing_loggers': False,
+        # Set the formatter for the logger
         'formatters': {
             'default': {
                 'format': '{asctime} {levelname} {filename}:{lineno} - {message}',
                 'style': '{'
             },
         },
+        # Set the handlers for the logger
         'handlers': {
+            # Handler for logging to the console
             'console': {
                 'class': 'logging.StreamHandler',
                 'formatter': 'default',
                 'level': 'DEBUG',
             },
+            # Handler for logging to a file
             'file': {
                 'class': 'logging.handlers.RotatingFileHandler',
                 'filename': log_file_path,
                 'formatter': 'default',
-                'level': 'INFO',
+                'level': 'DEBUG',
                 'maxBytes': 10485760,  # 10MB
                 'backupCount': 5,
             },
         },
+        # Set the loggers for the logger
         'loggers': {
+            # Root logger
             __name__: {
                 'handlers': ['console', 'file'],
                 'level': 'DEBUG',
                 'propagate': False,
             },
+            # Logger for console handler
             f'{__name__}.console': {
                 'handlers': ['console'],
-                'level': 'DEBUG',
-                'propagate': False,
-            },
-            f'{__name__}.file': {
-                'handlers': ['file'],
                 'level': 'INFO',
                 'propagate': False,
             },
+            # Logger for file handler
+            f'{__name__}.file': {
+                'handlers': ['file'],
+                'level': 'DEBUG',
+                'propagate': False,
+            },
+            # Logger for current file with both console and file handlers
+            # only this logger is currently in use
             f'{__name__}.{os.path.basename(__file__)}': {
                 'handlers': ['console', 'file'],
                 'level': 'DEBUG',
@@ -86,5 +70,5 @@ def setup_logger():
             },
         },
     })
-    
+    # Return the logger for the current file with both console and file handlers
     return logging.getLogger(f'{__name__}.{os.path.basename(__file__)}')

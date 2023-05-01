@@ -2,10 +2,11 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
-
+from .logger_config import setup_logger
 db = SQLAlchemy()
 DB_NAME = "schmeisinger.db"
 
+logger = setup_logger()
 
 def create_app():
     app = Flask(__name__) # initialize flask
@@ -41,4 +42,4 @@ def create_database(app):
     if not path.exists('website/' + DB_NAME):
         with app.app_context():
             db.create_all()
-        print('Created Database!')
+        logger.info("Created Database!")

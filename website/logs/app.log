@@ -1,1 +1,32 @@
 2023-05-01 02:16:03,755 INFO configure.py:39 - eising@sipgate.de requested username:admindda
+2023-05-01 21:40:59,118 INFO __init__.py:45 - Created Database!
+2023-05-01 21:40:59,459 INFO __init__.py:45 - Created Database!
+2023-05-01 21:41:48,233 INFO auth.py:61 - User ulfdickhammer@g.de registered
+2023-05-01 21:42:56,837 INFO __init__.py:45 - Created Database!
+2023-05-01 21:42:58,282 INFO __init__.py:45 - Created Database!
+2023-05-01 21:42:59,701 INFO __init__.py:45 - Created Database!
+2023-05-01 21:43:03,400 INFO auth.py:34 - User ulfdickhammer@g.de logged out
+2023-05-01 21:43:22,347 INFO __init__.py:45 - Created Database!
+2023-05-01 21:43:23,824 INFO __init__.py:45 - Created Database!
+2023-05-01 21:44:16,691 INFO __init__.py:45 - Created Database!
+2023-05-01 21:44:27,192 INFO __init__.py:45 - Created Database!
+2023-05-01 21:44:31,654 INFO __init__.py:45 - Created Database!
+2023-05-01 21:44:40,177 INFO __init__.py:45 - Created Database!
+2023-05-01 21:44:41,611 INFO __init__.py:45 - Created Database!
+2023-05-01 21:44:43,088 INFO __init__.py:45 - Created Database!
+2023-05-01 21:44:50,588 INFO __init__.py:45 - Created Database!
+2023-05-01 21:44:53,037 INFO __init__.py:45 - Created Database!
+2023-05-01 21:44:54,491 INFO __init__.py:45 - Created Database!
+2023-05-01 21:45:03,974 INFO __init__.py:45 - Created Database!
+2023-05-01 21:45:06,422 INFO __init__.py:45 - Created Database!
+2023-05-01 21:45:07,847 INFO __init__.py:45 - Created Database!
+2023-05-01 21:45:16,382 INFO __init__.py:45 - Created Database!
+2023-05-01 21:45:27,264 INFO __init__.py:45 - Created Database!
+2023-05-01 21:45:27,619 INFO __init__.py:45 - Created Database!2023-05-01 21:45:40,319 INFO auth.py:23 - User ulfdickhammer@g.de login
+2023-05-01 21:45:46,192 INFO auth.py:34 - User ulfdickhammer@g.de logout
+2023-05-01 21:45:52,664 INFO auth.py:23 - User ulfdickhammer@g.de login
+2023-05-01 21:51:08,617 INFO __init__.py:45 - Created Database!
+2023-05-01 21:54:44,728 INFO __init__.py:45 - Created Database!
+2023-05-01 21:54:57,299 INFO __init__.py:45 - Created Database!
+2023-05-01 21:55:52,270 INFO __init__.py:45 - Created Database!
+2023-05-01 21:55:52,614 INFO __init__.py:45 - Created Database!
