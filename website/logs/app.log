@@ -62,3 +62,13 @@
 2023-05-02 22:16:51,378 INFO __init__.py:45 - Created Database!
 2023-05-02 22:18:51,779 INFO __init__.py:45 - Created Database!
 2023-05-02 23:57:13,447 INFO __init__.py:45 - Created Database!
+2023-05-03 01:23:12,782 INFO __init__.py:45 - Created Database!
+2023-05-03 01:24:44,971 INFO __init__.py:45 - Created Database!
+2023-05-03 01:24:46,462 INFO __init__.py:45 - Created Database!
+2023-05-03 01:25:40,693 INFO __init__.py:45 - Created Database!
+2023-05-03 01:25:41,120 INFO __init__.py:45 - Created Database!
+2023-05-03 01:26:11,066 INFO auth.py:61 - User eising@sipgate.de registered
+2023-05-03 01:26:11,068 INFO auth.py:64 - User eising@sipgate.de login
+2023-05-03 01:26:43,101 INFO configure.py:39 - eising@sipgate.de requested username:heinrich
+2023-05-03 01:26:46,057 INFO configure.py:39 - eising@sipgate.de requested username:derksi
+2023-05-03 01:26:48,519 INFO configure.py:39 - eising@sipgate.de requested username:benno

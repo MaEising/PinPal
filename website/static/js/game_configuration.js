@@ -20,16 +20,16 @@ function update_quantity(id) {
   xhr.onreadystatechange = function () {
     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
       let currentValue = parseInt(targetElement.innerHTML, 10);
-      let currentTotalFine = parseInt(totalFineElement.innerHTML, 10);
+      let currentTotalFine = parseFloat(totalFineElement.innerHTML, 10);
       if (action === "add") {
         if (currentValue + 1 >= 0) {
           targetElement.innerHTML = currentValue + 1;
-          totalFineElement.innerHTML = currentTotalFine + payAmount;
+          totalFineElement.innerHTML = (currentTotalFine + parseFloat(payAmount)).toFixed(2)+ "€";
         }
       } else if (action === "subtract") {
         if (currentValue - 1 >= 0) {
           targetElement.innerHTML = currentValue - 1;
-          totalFineElement.innerHTML = currentTotalFine - payAmount;
+          totalFineElement.innerHTML = (currentTotalFine - parseFloat(payAmount)).toFixed(2)+ "€";
         }
       }
     }
