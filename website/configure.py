@@ -160,6 +160,7 @@ def delete_penalty(penalty_id):
 # Updates the given PenaltyRecord.penalty.quantity for one participant inside a game, writes the changes to the PenaltyRecordEntity database object
 # also the total_fine the participant has to pay is updated inside the database
 def update_quantity():
+    is_performed = False
     if request.method != 'POST':
         abort(405)
     penalty_id = request.json.get("penaltyId")
@@ -184,19 +185,22 @@ def update_quantity():
     # take the PenaltyRecord from the database belonging to the participant for this exact penalty
     target_PenaltyRecordEntity = PenaltyRecordEntity.query.filter_by(game_id = game_id,penalty_id = penalty_id, participant_id = participant_id).first()
     total_fine = TotalFineEntity.query.filter_by(game_id = game_id, participant_id = participant_id).first()
-    # Update the quantity inside the Database depending on the chosen action in the frontend
+    # Update the quantity inside the Database depending on the chosen action in the frontend. Make sure the quantity is not negative
     if action == 'add':
         target_PenaltyRecordEntity.quantity += 1
-    elif action == 'subtract':
+        is_performed = True
+    elif action == 'subtract' and target_PenaltyRecordEntity.quantity >= 1:
         target_PenaltyRecordEntity.quantity -= 1
+        is_performed = True
     # Get total_fine value, set totalFine value to new pay_amount
-    total_fine_value = total_fine.get_value()
-    total_fine_value += target_PenaltyRecordEntity.quantity * target_PenaltyRecordEntity.penalty.pay_amount
-    total_fine.set_value(total_fine_value)
-    # commit all to database
-    db.session.add(target_PenaltyRecordEntity)
-    db.session.add(total_fine)
-    db.session.commit()
+    if is_performed:
+        total_fine_value = total_fine.get_value()
+        total_fine_value += target_PenaltyRecordEntity.quantity * target_PenaltyRecordEntity.penalty.pay_amount
+        total_fine.set_value(total_fine_value)
+        # commit all to database
+        db.session.add(target_PenaltyRecordEntity)
+        db.session.add(total_fine)
+        db.session.commit()
     return redirect(url_for('views.view_game', game_id = game_id))
 
 @configure.route('/delete_game/<int:game_id>', methods=['POST'])

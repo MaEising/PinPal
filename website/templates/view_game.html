@@ -4,27 +4,26 @@ game.date_created.strftime('%Y-%m-%d') }} {% endblock %} {% block content %}
 <table class="table table-responsive">
   <thead>
     <tr class="text-center text-style">
-      <th>Spieler</th>
-      {% for penalty in all_penalties %}
-      <th>{{ penalty.title }}</th>
-      {% endfor %}
-      <th>Spieler</th>
+      <th colspan="{{ all_penalties|length + 2 }}">Gametable</th>
     </tr>
-  </thead>
+  </thead>  
   <tbody>
     {% for player_record in player_record_list %}
     <tr class="text-center text-style">
-      <td style="vertical-align: middle">{{player_record.participant_name}}</td>
+      <td style="vertical-align: middle">
+        <div class="player-square">{{player_record.participant_name}}</td></div>
       {% for penalty in player_record.penalties %}
       <td style="min-width: 150px">
+        {{penalty.penalty_name}}
+        <br>
         <div
-          id="{{player_record.game_id}}-{{penalty.id}}-{{player_record.participant_id}}-penalty-quantity"
-        >
+          id="{{player_record.game_id}}-{{penalty.id}}-{{player_record.participant_id}}-{{penalty.penalty_amount}}-penalty-quantity"
+        > 
           {{penalty.penalty_quantity}}
         </div>
         <button
           id="{{player_record.game_id}}-{{ penalty.id}}-{{player_record.participant_id}}-add"
-          onclick="update_quantity('{{ player_record.game_id }}-{{ penalty.id}}-{{player_record.participant_id}}-add')"
+          onclick="update_quantity('{{ player_record.game_id }}-{{ penalty.id}}-{{player_record.participant_id}}-{{penalty.penalty_amount}}-add')"
           class="quantity-up-button"
           style="height: 40px; width: 40px; background-color: lightgreen"
           type="submit"
@@ -33,7 +32,7 @@ game.date_created.strftime('%Y-%m-%d') }} {% endblock %} {% block content %}
         </button>
         <button
           id="{{player_record.game_id}}-{{ penalty.id}}-{{player_record.participant_id}}-subtract"
-          onclick="update_quantity('{{ player_record.game_id }}-{{ penalty.id}}-{{player_record.participant_id}}-subtract')"
+          onclick="update_quantity('{{ player_record.game_id }}-{{ penalty.id}}-{{player_record.participant_id}}-{{penalty.penalty_amount}}-subtract')"
           class="quantity-down-button"
           style="height: 40px; width: 40px; background-color: #f87217"
           type="submit"
@@ -42,16 +41,9 @@ game.date_created.strftime('%Y-%m-%d') }} {% endblock %} {% block content %}
         </button>
       </td>
       {% endfor %}
-      <td style="vertical-align: middle">{{player_record.participant_name}}</td>
+      <td id="{{player_record.gameId}}-{{ player_record.participantId }}-total-fine" style="vertical-align: middle">{{player_record.participant_total_fine.total_pay_amount}} €</td>
     </tr>
     {% endfor%}
-    <tr style="font-weight: bold" class="text-center text-style">
-      <td style="vertical-align: middle">Spieler</td>
-      {% for penalty in all_penalties %}
-      <td style="vertical-align: middle">{{penalty.title}}</td>
-      {% endfor %}
-      <td style="vertical-align: middle">Spieler</td>
-    </tr>
   </tbody>
 </table>
 <form

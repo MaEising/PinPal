@@ -37,7 +37,7 @@ def create_or_load_game():
     participants = ParticipantEntity.query.filter_by(user_id=current_user.id, status = ParticipantStatus.active)
     all_saved_games = GameEntity.query.filter_by(user_id = current_user.id, status = GameStatus.active).all()
     len_all_saved_games = len(all_saved_games)
-    print("len_all_saved_games:", len_all_saved_games)
+    logger.debug("len_all_saved_games:", len_all_saved_games)
     return render_template("create_or_load_game.html", game_participants=participants, user=current_user, all_saved_games = all_saved_games, len_all_saved_games=len_all_saved_games)
 
 # Display certain game
