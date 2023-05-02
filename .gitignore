@@ -1,0 +1,4 @@
+instance/*
+instance
+website/__pycache__/*
+website/logs/*
