@@ -127,6 +127,11 @@ table.border {
   margin-bottom: 0px;
 }
 
+/* long text break for create_or_load game view*/
+.long-text {
+  word-wrap: break-word;
+}
+
 /* ############################## BUTTONS ############################## */
 .btn {
   font-family: "Poppins";

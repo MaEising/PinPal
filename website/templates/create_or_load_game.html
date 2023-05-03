@@ -41,8 +41,9 @@ block content %}
                   name="players"
                   id="players"
                 />
-                <label for="active_players"> {{ player.username }} </label>
-              </div>
+                <label for="active_players" style="width: 80px; word-wrap: break-word" {% if player.username|length > 7 %} class="long-text" {% endif %}>
+              {{ player.username }}
+                </div>
             </td>
             {% if loop.index % 2 == 1 %}
           </tr>
