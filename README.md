@@ -1,11 +1,11 @@
 ### TODO
+
 - Alles auf Englisch übersetzen, code nur in Englisch
 - flaticon.com für bilder und icons nennen
 
-
 ### Work in Progress:
 
-- Logging in jeder funktion unterbringen (info) warning / debug im laufe des codes und an stellen wo prints gesetzt sind 
+- Logging in jeder funktion unterbringen (info) warning / debug im laufe des codes und an stellen wo prints gesetzt sind
 - Usability verbessern und am Handy Strichliste nutzbar machen
 
 ### IDEAS
@@ -14,6 +14,5 @@
 - Option beim anlegen von Strafen die das invertieren erlaubt. Betrag wird nicht dem Spieler angerechnet sondern allen anderen (z.B. beim werfen von neunen)
 - kleines Fragezeichen oder so neben den Button den man als Erklärung dann anklicken kann
 
-
-### BUGS
-* view_game: when using save /finish button, quantities increase / decrease and totalfine gets doubled
+### bugs and errors
+- create_or_load game player.username table looks super shit if more than 12 players are defined
