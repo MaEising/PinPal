@@ -41,14 +41,14 @@ block content %}
                   name="players"
                   id="players"
                 />
-                <label for="active_players" style="width: 80px; word-wrap: break-word" {% if player.username|length > 7 %} class="long-text" {% endif %}>
+                <label for="active_players" style="width: 90px; word-wrap: break-word" {% if player.username|length > 7 %} class="long-text" {% endif %}>
               {{ player.username }}
                 </div>
             </td>
             {% if loop.index % 2 == 1 %}
           </tr>
           {% endif %} {% endfor %}
-          <td><button type="submit" class="mt-2 mb-2 btn btn-primary">Bestätigen</button></td>
+            <td><button type="submit" class="mt-2 mb-2 btn btn-primary">Bestätigen</button></td>
         </tbody>
         </table>
       </form>
