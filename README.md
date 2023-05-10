@@ -2,11 +2,14 @@
 
 - Alles auf Englisch übersetzen, code nur in Englisch
 - flaticon.com für bilder und icons nennen
+- im usermanagement und in gamecreation site Usernamen umbrechen ab 7 Zeichen, mehr als 10 Zeichen sollten mit ... versteckt werden
 
 ### Work in Progress:
 
 - Logging in jeder funktion unterbringen (info) warning / debug im laufe des codes und an stellen wo prints gesetzt sind
 - Usability verbessern und am Handy Strichliste nutzbar machen
+  * game_configuration: wip: Funktion um hideRows sichtbar zu machen
+    * die Rows müssen beim erneuten Aufruf der Funktion wieder versteckt werden -> bleiben permanent Sichtbar nach dem ersten klicken
 
 ### IDEAS
 
@@ -16,3 +19,4 @@
 
 ### bugs and errors
 - create_or_load game player.username table looks super shit if more than 12 players are defined
+- game_summary does not correctly display totalfines

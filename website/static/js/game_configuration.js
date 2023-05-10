@@ -43,3 +43,14 @@ function update_quantity(id) {
     })
   );
 }
+
+// Retrieves an id that includes an identifier for all table cells inside a row. On each <td> there is a class set "hideRow" which has to be removed on function call.
+// If a different row is targeted hideRow should be added back again
+// id looks like this {{ player_record.game_id}}-{{ player_record.participant_id }}-tablecell
+function displayUserPenalties(tableCellId) {
+  // Remove "hideRow" class from all table cells with the specified id
+  var tableCells = document.querySelectorAll("[id='" + tableCellId + "']");
+  tableCells.forEach(function (cell) {
+    cell.classList.remove("hideRow");
+  });
+}

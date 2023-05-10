@@ -247,4 +247,8 @@ table.border {
   background-color: rgba(231, 154, 39, 0.6);
   /* background-image: url('/static/images/profile_avatars/dieb.png'); */
 }
+
+.hideRow {
+  display: none;
+}
 /* ####################### GAME SECTION ENDS ########################### */

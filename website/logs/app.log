@@ -73,3 +73,30 @@
 2023-05-03 01:26:46,057 INFO configure.py:39 - eising@sipgate.de requested username:derksi
 2023-05-03 01:26:48,519 INFO configure.py:39 - eising@sipgate.de requested username:benno
 2023-05-03 01:45:15,560 INFO auth.py:23 - User eising@sipgate.de login
+2023-05-10 21:09:40,146 INFO __init__.py:45 - Created Database!
+2023-05-10 21:09:40,585 INFO __init__.py:45 - Created Database!
+2023-05-10 21:10:13,309 INFO auth.py:23 - User eising@sipgate.de login
+2023-05-10 21:32:56,161 INFO __init__.py:45 - Created Database!
+2023-05-10 21:32:56,524 INFO __init__.py:45 - Created Database!
+2023-05-10 21:33:00,058 INFO auth.py:35 - User eising@sipgate.de logout
+2023-05-10 21:33:10,556 INFO auth.py:63 - Create initial Penalties for User matthis.eising@googlemail.com
+2023-05-10 21:33:10,556 INFO auth.py:64 - User matthis.eising@googlemail.com registered
+2023-05-10 21:33:10,557 INFO auth.py:67 - User matthis.eising@googlemail.com login
+2023-05-10 21:33:45,330 INFO __init__.py:45 - Created Database!
+2023-05-10 21:33:55,897 INFO __init__.py:45 - Created Database!
+2023-05-10 21:33:57,655 INFO auth.py:35 - User matthis.eising@googlemail.com logout
+2023-05-10 21:34:04,088 INFO auth.py:63 - Create initial Penalties for User matthis.eising1@googlemail.com
+2023-05-10 21:34:04,088 INFO auth.py:64 - User matthis.eising1@googlemail.com registered
+2023-05-10 21:34:04,090 INFO auth.py:67 - User matthis.eising1@googlemail.com login
+2023-05-10 21:35:39,843 INFO configure.py:39 - matthis.eising1@googlemail.com requested username:ben
+2023-05-10 21:35:41,636 INFO configure.py:39 - matthis.eising1@googlemail.com requested username:heinrich
+2023-05-10 21:35:44,490 INFO configure.py:39 - matthis.eising1@googlemail.com requested username:derksen
+2023-05-10 21:45:28,831 INFO __init__.py:45 - Created Database!
+2023-05-10 21:45:29,211 INFO __init__.py:45 - Created Database!
+2023-05-10 21:45:32,329 INFO auth.py:35 - User matthis.eising1@googlemail.com logout
+2023-05-10 21:45:41,933 INFO auth.py:63 - Create initial Penalties for User matthis.eysing1@googlemail.com
+2023-05-10 21:45:41,933 INFO auth.py:64 - User matthis.eysing1@googlemail.com registered
+2023-05-10 21:45:41,934 INFO auth.py:67 - User matthis.eysing1@googlemail.com login
+2023-05-10 21:47:39,687 INFO __init__.py:45 - Created Database!
+2023-05-10 21:55:03,153 INFO configure.py:39 - matthis.eysing1@googlemail.com requested username:heinrich
+2023-05-10 21:55:06,184 INFO configure.py:39 - matthis.eysing1@googlemail.com requested username:ben

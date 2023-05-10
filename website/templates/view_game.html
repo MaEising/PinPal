@@ -11,9 +11,10 @@ game.date_created.strftime('%Y-%m-%d') }} {% endblock %} {% block content %}
     {% for player_record in player_record_list %}
     <tr class="text-center text-style">
       <td style="vertical-align: middle">
-        <div class="player-square">{{player_record.participant_name}}</td></div>
+        <div onclick="displayUserPenalties('{{ player_record.game_id}}-{{ player_record.participant_id }}-tablecell')" class="player-square">{{player_record.participant_name}}</td></div>
       {% for penalty in player_record.penalties %}
-      <td style="min-width: 150px">
+      <td class="hideRow" id="{{ player_record.game_id}}-{{ player_record.participant_id }}-tablecell" style="min-width: 150px">
+        <br>
         {{penalty.penalty_name}}
         <br>
         <div
@@ -43,7 +44,7 @@ game.date_created.strftime('%Y-%m-%d') }} {% endblock %} {% block content %}
       {% endfor %}
       <td>
       <div 
-        id="{{ player_record.game_id }}-{{ player_record.participant_id }}-total-fine" style="vertical-align: middle"> {{player_record.participant_total_fine.total_pay_amount}} €
+        id="{{ player_record.game_id }}-{{ player_record.participant_id }}-total-fine" style="vertical-align: middle"> <br>Total <br>{{player_record.participant_total_fine.total_pay_amount}} €
       </div>
       </td>
     </tr>

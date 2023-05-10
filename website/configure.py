@@ -148,12 +148,12 @@ def new_penalty():
 @configure.route('/delete_penalty/<int:penalty_id>', methods=['POST'])
 @login_required
 def delete_penalty(penalty_id):
-  if request.method == 'POST':
-    penalty = PenaltyEntity.query.get(penalty_id)
-    db.session.delete(penalty)
-    db.session.commit()
-    flash('Penalty successfully deleted',category='success')
-  return redirect(url_for('views.penalties'))
+    if request.method == 'POST':
+        penalty = PenaltyEntity.query.get(penalty_id)
+        db.session.delete(penalty)
+        db.session.commit()
+        flash('Penalty successfully deleted',category='success')
+    return redirect(url_for('views.penalties'))
 
 @configure.route('/update_quantity', methods=['POST'])
 @login_required
@@ -254,3 +254,13 @@ def finish_game(game_id):
     return redirect(url_for('views.game_summary', game_id = game_entity.id),code = '307')
 
 ### GAME SECTION
+
+
+# Generate some initial penelties on user creation for better experience 
+# called on user creation in auth.py
+def initial_object_generation(user_id,username):
+    db.session.add(PenaltyEntity(pay_amount=0.30,title="Glocke",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=1.00,title="Klingel",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=1.00,title="Ochsengasse",user_id=user_id))
+    db.session.add(ParticipantEntity(username=username,user_id=user_id,status=ParticipantStatus.active))
+    db.session.commit()
