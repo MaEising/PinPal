@@ -58,11 +58,9 @@ def reactivate_existing_participant(username):
     existing_participant = ParticipantEntity.query.filter_by(username=username, user_id=current_user.id).first()
     if existing_participant:
         if existing_participant.status == ParticipantStatus.active:
-            print("\n STATUS IS ACTIVE \n")
             flash("User already exists", category='error')
             return True
         elif existing_participant.status == ParticipantStatus.inactive:
-            print("\n STATUS IS INACTIVE \n")
             existing_participant.status = ParticipantStatus.active
             flash("User reactivated", category='success')
             db.session.add(existing_participant)
@@ -83,7 +81,7 @@ def delete_participant(participant_id):
     except InvalidInputError as e:
         flash("Error deleting Participant, invalid Input",category="error")
     except KeyError as e:
-        print(e)
+        logger.error("Key error occured by user {}, it was: {}".format(current_user.id,e))
         flash("Something went wrong", category="error")
   return redirect(url_for('views.user_management'))
 
@@ -119,7 +117,7 @@ def new_game():
                 participant_record = PenaltyRecordEntity(game_id=game.id, participant_id=player_id, penalty_id = penalty.id)
                 records.append(participant_record)
             except:
-                print("\n Error adding PenaltyRecordEntities for a participant to database - configure.py\n")
+                logger.debug("PenaltyRecordEntities for user {} could not be added to database".format(current_user.email))
     try:
         db.session.add_all(records)
         db.session.commit()
@@ -166,10 +164,6 @@ def update_quantity():
     participant_id = request.json.get("participantId")
     action = request.json.get("action")
     game_id = request.json.get("game_id")
-    print("\nRetrieved penalty_id:", penalty_id, "\n")
-    print("\nRetrieved participant_id:", participant_id, "\n")
-    print("\nRetrieved Action:", action, "\n")
-    print("\nGame id :", game_id, "\n")
     # bunch of validating
     if not re.match(r'^[0-9]+', str(game_id)):
         return jsonify({"status": "error", "message": "Invalid game ID"}), 400
@@ -181,6 +175,7 @@ def update_quantity():
         return jsonify({"status": "error", "message": "Invalid action"}), 400
     if not GameEntity.query.filter_by(user_id=current_user.id,id=game_id).first():
         return jsonify({"status": "error", "message": "Invalid Game"}), 400
+    logger.debug("Quantity Update from user {}, retrieved penalty_id: {}, participant_id: {},action: {} and game_id {}".format(current_user.email,penalty_id,participant_id,action,game_id))
     # take the PenaltyRecord from the database belonging to the participant for this exact penalty
     target_PenaltyRecordEntity = PenaltyRecordEntity.query.filter_by(game_id = game_id,penalty_id = penalty_id, participant_id = participant_id).first()
     total_fine = TotalFineEntity.query.filter_by(game_id = game_id, participant_id = participant_id).first()

@@ -37,7 +37,7 @@ def create_or_load_game():
     participants = ParticipantEntity.query.filter_by(user_id=current_user.id, status = ParticipantStatus.active)
     all_saved_games = GameEntity.query.filter_by(user_id = current_user.id, status = GameStatus.active).all()
     len_all_saved_games = len(all_saved_games)
-    print("len_all_saved_games:", len_all_saved_games)
+    logger.debug("Length of all saved_games for user {} is {}".format(current_user.email, len_all_saved_games))
     return render_template("create_or_load_game.html", game_participants=participants, user=current_user, all_saved_games = all_saved_games, len_all_saved_games=len_all_saved_games)
 
 # Display certain game
@@ -55,7 +55,7 @@ def view_game(game_id):
     if game_participants is None or game_participants == "":
         flash("invalid game", category="error")
         return render_template("create_or_load_game.html", user=current_user)
-    print("\n THIS IS THE GAME.STATUS: ", game.status,"\n")
+    logger.debug("Game Status for user {} is {}".format(current_user.email,game.status))
     if game.status == GameStatus.active:
         participants_data = []
         # Iterate through all participant ids
