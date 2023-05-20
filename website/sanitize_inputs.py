@@ -1,6 +1,12 @@
 from flask import flash
 from html import escape
 import re
+from .logger_config import setup_logger
+from flask_login import current_user
+
+
+
+logger = setup_logger()
 
 class InvalidInputError(ValueError):
     pass
@@ -29,6 +35,7 @@ def sanitize_string(description) -> str:
         raise ValueError("Invalid description.")    
     if len(description) > 249 or len(description) <= 1:
         flash("Error: The description cannot be more than 250 characters or less than 1 Character.", "error")
+        logger.info("Description was invalid and got blocked, Description: {}, by user: {}").format(current_user.email,description)
         raise ValueError("Invalid description.")
 
     # remove any characters that from these: <=":(');>

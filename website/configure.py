@@ -36,8 +36,8 @@ def new_users():
     if request.method == 'POST':
         try:
             username = request.form.get('username')
-            logger.info("{} requested username:{}".format(current_user.email,username))
             username = sanitize_string(username)
+            logger.info("{} requested username:{}".format(current_user.email,username))
         except ValueError as e:
             return redirect(url_for("views.user_management", user=current_user))
 
