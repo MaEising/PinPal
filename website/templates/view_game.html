@@ -9,9 +9,8 @@
   </thead>  
   <tbody>
     {% for player_record in player_record_list %}
-    {% set avatar_index = range(1, 9) | random %}
-    {% set avatar_path = '/static/images/profile_avatars/avatar' + avatar_index|string + '.png' %}
-
+    <!-- {% set avatar_index = range(1, 9) | random %} -->
+    {% set avatar_path = '/static/images/profile_avatars/avatar' + player_record.avatar_index|string + '.png' %}
     <tr class="text-center text-style">
       <td style="vertical-align: middle">
         <div onclick="toggleUserPenalties('{{ player_record.game_id}}-{{ player_record.participant_id }}-tablecell')" class="player-square square-border">{{player_record.participant_name}}

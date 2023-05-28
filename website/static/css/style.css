@@ -246,7 +246,6 @@ table.border {
   width: 100px;
   height: 120px;
   background-color: none;
-  /* background-image: url('/static/images/profile_avatars/dieb.png'); */
 }
 .square-border {
   border: 8px solid rgb(0, 0, 0);
