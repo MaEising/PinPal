@@ -146,25 +146,32 @@ def new_penalty():
 @configure.route('/delete_penalty/<int:penalty_id>', methods=['POST'])
 @login_required
 def delete_penalty(penalty_id):
-  if request.method == 'POST':
-    penalty = PenaltyEntity.query.get(penalty_id)
-    db.session.delete(penalty)
-    db.session.commit()
-    flash('Penalty successfully deleted',category='success')
-  return redirect(url_for('views.penalties'))
+    if request.method == 'POST':
+        penalty = PenaltyEntity.query.get(penalty_id)
+        db.session.delete(penalty)
+        db.session.commit()
+        flash('Penalty successfully deleted',category='success')
+    return redirect(url_for('views.penalties'))
 
 @configure.route('/update_quantity', methods=['POST'])
 @login_required
 # Updates the given PenaltyRecord.penalty.quantity for one participant inside a game, writes the changes to the PenaltyRecordEntity database object
 # also the total_fine the participant has to pay is updated inside the database
 def update_quantity():
+    is_performed = False
     if request.method != 'POST':
         abort(405)
-    penalty_id = request.json.get("penaltyId")
-    participant_id = request.json.get("participantId")
-    action = request.json.get("action")
-    game_id = request.json.get("game_id")
-    # bunch of validating
+    data = request.json
+    penalty_id = data.get("penaltyId")
+    participant_id = data.get("participantId")
+    action = data.get("action")
+    game_id = data.get("game_id")
+    print("\nRetrieved penalty_id:", penalty_id, "\n")
+    print("\nRetrieved participant_id:", participant_id, "\n")
+    print("\nRetrieved Action:", action, "\n")
+    print("\nGame id :", game_id, "\n")
+
+    # Validate input data
     if not re.match(r'^[0-9]+', str(game_id)):
         return jsonify({"status": "error", "message": "Invalid game ID"}), 400
     if not re.match(r'^[0-9]+', str(penalty_id)):
@@ -177,21 +184,26 @@ def update_quantity():
         return jsonify({"status": "error", "message": "Invalid Game"}), 400
     logger.debug("Quantity Update from user {}, retrieved penalty_id: {}, participant_id: {},action: {} and game_id {}".format(current_user.email,penalty_id,participant_id,action,game_id))
     # take the PenaltyRecord from the database belonging to the participant for this exact penalty
-    target_PenaltyRecordEntity = PenaltyRecordEntity.query.filter_by(game_id = game_id,penalty_id = penalty_id, participant_id = participant_id).first()
-    total_fine = TotalFineEntity.query.filter_by(game_id = game_id, participant_id = participant_id).first()
-    # Update the quantity inside the Database depending on the chosen action in the frontend
+    target_PenaltyRecordEntity = PenaltyRecordEntity.query.filter_by(game_id=game_id, penalty_id=penalty_id, participant_id=participant_id).first()
+    total_fine = TotalFineEntity.query.filter_by(game_id=game_id, participant_id=participant_id).first()
+    # Update the quantity inside the Database depending on the chosen action in the frontend. Make sure the quantity is not negative
     if action == 'add':
         target_PenaltyRecordEntity.quantity += 1
-    elif action == 'subtract':
+        is_performed = True
+    elif action == 'subtract' and target_PenaltyRecordEntity.quantity >= 1:
         target_PenaltyRecordEntity.quantity -= 1
+        is_performed = True
     # Get total_fine value, set totalFine value to new pay_amount
-    total_fine_value = total_fine.get_value()
-    total_fine_value += target_PenaltyRecordEntity.quantity * target_PenaltyRecordEntity.penalty.pay_amount
-    total_fine.set_value(total_fine_value)
-    # commit all to database
-    db.session.add(target_PenaltyRecordEntity)
-    db.session.add(total_fine)
-    db.session.commit()
+    if is_performed:
+        total_fine_value = total_fine.get_value()
+        total_fine_value = target_PenaltyRecordEntity.quantity * target_PenaltyRecordEntity.penalty.pay_amount
+        total_fine.set_value(total_fine_value)
+        print("TOTAL FINE HAS BEEN UPDATED TO", total_fine.get_value())
+        # commit all to database
+        db.session.add(target_PenaltyRecordEntity)
+        db.session.add(total_fine)
+        db.session.commit()
+
     return redirect(url_for('views.view_game', game_id = game_id))
 
 @configure.route('/delete_game/<int:game_id>', methods=['POST'])
@@ -245,3 +257,13 @@ def finish_game(game_id):
     return redirect(url_for('views.game_summary', game_id = game_entity.id),code = '307')
 
 ### GAME SECTION
+
+
+# Generate some initial penelties on user creation for better experience 
+# called on user creation in auth.py
+def initial_object_generation(user_id,username):
+    db.session.add(PenaltyEntity(pay_amount=0.30,title="Glocke",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=1.00,title="Klingel",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=1.00,title="Ochsengasse",user_id=user_id))
+    db.session.add(ParticipantEntity(username=username,user_id=user_id,status=ParticipantStatus.active))
+    db.session.commit()

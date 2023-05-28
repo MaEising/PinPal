@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash # stor
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
 from .logger_config import setup_logger
+from .configure import initial_object_generation
 auth = Blueprint('auth', __name__)
 
 
@@ -58,6 +59,8 @@ def sign_up():
             user = UserEntity(email=email,first_name=first_name,password=generate_password_hash(password1, method='sha256'))
             db.session.add(user)
             db.session.commit()
+            initial_object_generation(user.id,user.first_name)
+            logger.info("Create initial Penalties for User {}".format(email))
             logger.info("User {} registered".format(email))
             flash('Account created', category='success')
             login_user(user, remember=True)

@@ -127,6 +127,11 @@ table.border {
   margin-bottom: 0px;
 }
 
+/* long text break for create_or_load game view*/
+.long-text {
+  word-wrap: break-word;
+}
+
 /* ############################## BUTTONS ############################## */
 .btn {
   font-family: "Poppins";
@@ -232,3 +237,27 @@ table.border {
   color: rgb(0, 0, 0);
 }
 /* ############################## BUTTONS ############################## */
+/* ########################### GAME SECTION ############################ */
+
+.player-square {
+  font-family: "Poppins";
+  font-size: larger;
+  align-items: center;
+  width: 100px;
+  height: 120px;
+  background-color: none;
+}
+.square-border {
+  border: 8px solid rgb(0, 0, 0);
+  border-radius: 25px;
+}
+.hideRow {
+  display: none;
+}
+
+.avatar-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+/* ####################### GAME SECTION ENDS ########################### */

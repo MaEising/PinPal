@@ -5,6 +5,8 @@ from sqlalchemy.sql import func
 from sqlalchemy import Enum as SQLAlchemyEnum
 import datetime
 import json
+import random
+import os, os.path
 
 # There is a convention in flask sqlalchemy to convert CamelCase tablenames to camel_case
 # when creating a foreign key to reference the table name use the camel_case as reference
@@ -63,11 +65,19 @@ class ParticipantEntity(db.Model):
     username = db.Column(db.String(150))
     user_id = db.Column(db.Integer, db.ForeignKey('user_entity.id'))
     status = db.Column(SQLAlchemyEnum(ParticipantStatus), default=ParticipantStatus.active)
+    avatar_index = db.Column(db.Integer)
 
-    def __init__(self, username, user_id,status):
+    def __init__(self, username, user_id, status):
         self.username = username
         self.user_id = user_id
         self.status = status
+        self.update_avatar_index()
+
+    def update_avatar_index(self):
+        avatar_directory = 'website/static/images/profile_avatars'
+        avatar_files = os.listdir(avatar_directory)
+        num_files = len(avatar_files)
+        self.avatar_index = random.randint(1, num_files)
 
 class PenaltyRecordEntity(db.Model):
     id = db.Column(db.Integer, primary_key=True)

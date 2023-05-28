@@ -1,4 +1,5 @@
 from .data_models import PenaltyRecord, Penalty
+import random
 
 def map_penalties(all_penalties, quantity=0):
     penalties = []
@@ -9,7 +10,7 @@ def map_penalties(all_penalties, quantity=0):
 def map_penalty_records(PenaltyRecord_of_player, game_id, all_penalties,participant_total_fine):
     data_penaltyrecords_list = []
     penalties = map_penalties(all_penalties, PenaltyRecord_of_player.quantity)
-    data_penaltyrecords_list.append(PenaltyRecord(game_id,penalties,PenaltyRecord_of_player.participant.username, PenaltyRecord_of_player.participant_id, participant_total_fine))
+    data_penaltyrecords_list.append(PenaltyRecord(game_id,penalties,PenaltyRecord_of_player.participant.username, PenaltyRecord_of_player.participant_id,PenaltyRecord_of_player.participant.avatar_index, participant_total_fine))
     return data_penaltyrecords_list
 
 def map_to_game_summary(all_penalty_records_of_player, participant_total_fine):

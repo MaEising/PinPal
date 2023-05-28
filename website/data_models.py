@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+import random
 
 # Für Jeden User muss Jede Strafe als Objekt angelegt werden,
 # diese dann in eine Liste joinen und dem PenaltyRecord Objekt übergeben
@@ -18,4 +19,5 @@ class PenaltyRecord:
     penalties: list # Liste mit allen Penalty Objekten eines Users
     participant_name: str
     participant_id: int
+    avatar_index: int
     participant_total_fine: int = field(default=0)
