@@ -1,5 +1,7 @@
 let currentRow = null;
-
+function stripNonNumeric(inputString) {
+  return inputString.replace(/[^0-9.]/g, "");
+}
 function update_quantity(id) {
   console.log("Button id:", id);
   let gameId = id.split("-")[0];
@@ -30,7 +32,9 @@ function update_quantity(id) {
   xhr.onreadystatechange = function () {
     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
       let currentValue = parseInt(targetElement.innerHTML, 10);
-      let currentTotalFine = parseFloat(totalFineElement.innerHTML, 10);
+      let currentTotalFine = parseFloat(
+        stripNonNumeric(totalFineElement.innerHTML, 10)
+      );
       if (action === "add") {
         if (currentValue + 1 >= 0) {
           targetElement.innerHTML = currentValue + 1;

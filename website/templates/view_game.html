@@ -50,7 +50,7 @@
       {% endfor %}
       <td>
       <div 
-        id="{{ player_record.game_id }}-{{ player_record.participant_id }}-total-fine" style="vertical-align: middle"> <br>{{player_record.participant_total_fine.total_pay_amount}} €
+        id="{{ player_record.game_id }}-{{ player_record.participant_id }}-total-fine" style="vertical-align: middle"> <br>{{player_record.participant_total_fine.total_pay_amount| default(0)}} €
       </div>
       </td>
     </tr>
