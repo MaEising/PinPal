@@ -163,15 +163,17 @@ def update_quantity():
     is_performed = False
     if request.method != 'POST':
         abort(405)
-    penalty_id = request.json.get("penaltyId")
-    participant_id = request.json.get("participantId")
-    action = request.json.get("action")
-    game_id = request.json.get("game_id")
+    data = request.json
+    penalty_id = data.get("penaltyId")
+    participant_id = data.get("participantId")
+    action = data.get("action")
+    game_id = data.get("game_id")
     print("\nRetrieved penalty_id:", penalty_id, "\n")
     print("\nRetrieved participant_id:", participant_id, "\n")
     print("\nRetrieved Action:", action, "\n")
     print("\nGame id :", game_id, "\n")
-    # bunch of validating
+
+    # Validate input data
     if not re.match(r'^[0-9]+', str(game_id)):
         return jsonify({"status": "error", "message": "Invalid game ID"}), 400
     if not re.match(r'^[0-9]+', str(penalty_id)):
@@ -182,9 +184,10 @@ def update_quantity():
         return jsonify({"status": "error", "message": "Invalid action"}), 400
     if not GameEntity.query.filter_by(user_id=current_user.id,id=game_id).first():
         return jsonify({"status": "error", "message": "Invalid Game"}), 400
+
     # take the PenaltyRecord from the database belonging to the participant for this exact penalty
-    target_PenaltyRecordEntity = PenaltyRecordEntity.query.filter_by(game_id = game_id,penalty_id = penalty_id, participant_id = participant_id).first()
-    total_fine = TotalFineEntity.query.filter_by(game_id = game_id, participant_id = participant_id).first()
+    target_PenaltyRecordEntity = PenaltyRecordEntity.query.filter_by(game_id=game_id, penalty_id=penalty_id, participant_id=participant_id).first()
+    total_fine = TotalFineEntity.query.filter_by(game_id=game_id, participant_id=participant_id).first()
     # Update the quantity inside the Database depending on the chosen action in the frontend. Make sure the quantity is not negative
     if action == 'add':
         target_PenaltyRecordEntity.quantity += 1
@@ -195,12 +198,14 @@ def update_quantity():
     # Get total_fine value, set totalFine value to new pay_amount
     if is_performed:
         total_fine_value = total_fine.get_value()
-        total_fine_value += target_PenaltyRecordEntity.quantity * target_PenaltyRecordEntity.penalty.pay_amount
+        total_fine_value = target_PenaltyRecordEntity.quantity * target_PenaltyRecordEntity.penalty.pay_amount
         total_fine.set_value(total_fine_value)
+        print("TOTAL FINE HAS BEEN UPDATED TO", total_fine.get_value())
         # commit all to database
         db.session.add(target_PenaltyRecordEntity)
         db.session.add(total_fine)
         db.session.commit()
+
     return redirect(url_for('views.view_game', game_id = game_id))
 
 @configure.route('/delete_game/<int:game_id>', methods=['POST'])

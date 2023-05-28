@@ -7,13 +7,21 @@ function update_quantity(id) {
   let participantId = id.split("-")[2];
   let payAmount = id.split("-")[3];
   let action = id.split("-")[4];
+  console.log("Pay amount:", payAmount);
 
   let targetId =
-    gameId + "-" + penaltyId + "-" + participantId + "-" + payAmount + "-penalty-quantity";
+    gameId +
+    "-" +
+    penaltyId +
+    "-" +
+    participantId +
+    "-" +
+    payAmount +
+    "-penalty-quantity";
   let targetElement = document.getElementById(targetId);
 
   let totalFineId = gameId + "-" + participantId + "-total-fine";
-  console.log("TotalFineId:", totalFineId)
+  console.log("TotalFineId:", totalFineId);
   let totalFineElement = document.getElementById(totalFineId);
 
   let xhr = new XMLHttpRequest();
@@ -26,12 +34,14 @@ function update_quantity(id) {
       if (action === "add") {
         if (currentValue + 1 >= 0) {
           targetElement.innerHTML = currentValue + 1;
-          totalFineElement.innerHTML = (currentTotalFine + parseFloat(payAmount)).toFixed(2)+ "€";
+          totalFineElement.innerHTML =
+            (currentTotalFine + parseFloat(payAmount)).toFixed(2) + "€";
         }
       } else if (action === "subtract") {
         if (currentValue - 1 >= 0) {
           targetElement.innerHTML = currentValue - 1;
-          totalFineElement.innerHTML = (currentTotalFine - parseFloat(payAmount)).toFixed(2)+ "€";
+          totalFineElement.innerHTML =
+            (currentTotalFine - parseFloat(payAmount)).toFixed(2) + "€";
         }
       }
     }
@@ -48,14 +58,14 @@ function update_quantity(id) {
 
 function toggleUserPenalties(tableCellId) {
   // Check if the clicked row is already revealed
-  if ( currentRow !== null && currentRow[0].id === tableCellId) {
+  if (currentRow !== null && currentRow[0].id === tableCellId) {
     // Hide the currently revealed row
     currentRow.forEach(function (cell) {
       cell.classList.add("hideRow");
     });
     currentRow = null;
   } else {
-    displayUserPenalties(tableCellId)
+    displayUserPenalties(tableCellId);
   }
 }
 // Retrieves an id that includes an identifier for all table cells inside a row. On each <td> there is a class set "hideRow" which has to be removed on function call.
@@ -66,8 +76,8 @@ function displayUserPenalties(tableCellId) {
   // check if row is currently revealed
   if (currentRow !== null) {
     // Hide the currently revealed row
-    currentRow.forEach(function(cell) {
-      cell.classList.add("hideRow")
+    currentRow.forEach(function (cell) {
+      cell.classList.add("hideRow");
     });
   }
   // Remove "hideRow" class from all table cells with the specified id
