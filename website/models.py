@@ -98,6 +98,7 @@ class PenaltyRecordEntity(db.Model):
         else:
             self.date_created = date_created
 
+# XXX Refactor this
 class TotalFineEntity(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     participant_id = db.Column(db.Integer, db.ForeignKey('participant_entity.id'))
@@ -109,8 +110,14 @@ class TotalFineEntity(db.Model):
         self.game_id = game_id
         self.total_pay_amount = total_pay_amount
 
-    def get_value(self):
+    def get_total_pay_amount(self) -> float:
         return self.total_pay_amount
-    
-    def set_value(self, value):
-        self.total_pay_amount = value
+
+    def add_value(self, penalty_amount: float):
+        self.total_pay_amount += penalty_amount
+
+    def subtract_value(self, penalty_amount: float):
+        self.total_pay_amount -= penalty_amount
+
+    def reset_total_pay_amount(self):
+        self.total_pay_amount = 0

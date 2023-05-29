@@ -11,6 +11,43 @@
       />
     </button>
   </div>
+<br>
+<table class="table table-responsive">
+    <thead>
+      <th colspan="{{ penalty_sum }}">
+        <h2 class="center"> Zusammenfassung </h2>
+    </thead>
+    <tbody>
+      <tr class="text-center text-style">
+        <td>Spieler</td>
+        {% for penalty in all_penalties %}
+        <td>{{ penalty.title }}</td>
+        {% endfor %}
+        <td>Strafbetrag</td>
+        <td>Spieler</td>
+      </tr>
+      {% for summary_object in game_summary_objects %}
+        <tr class="text-center text-style">
+              <td style="vertical-align: middle;">
+                {{summary_object.participant_name}}
+              </td>
+          {% for penalty in summary_object.penalties %}
+          <td>
+            <div >{{penalty.penalty_quantity}}</div>
+          </td>
+          {% endfor %}
+          <td>{{ summary_object.participant_total_fine.total_pay_amount }} €</td>
+          <td style="vertical-align: middle;">
+            {{summary_object.participant_name}}
+          </td>
+        </tr>
+        {% endfor%}
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <br>
+  <br>
   <table class="table table-bordered">
     <thead>
     <th colspan="3">
@@ -29,34 +66,4 @@
 </tbody>
 </table>
 <br>
-<br>
-<table class="table table-responsive">
-    <thead>
-      <th colspan="{{ penalty_sum }}">
-        <h2 class="center"> Zusammenfassung </h2>
-    </thead>
-    <tbody>
-      <tr class="text-center text-style">
-        <td>Spieler</td>
-        {% for penalty in all_penalties %}
-        <td>{{ penalty.title }}</td>
-        {% endfor %}
-        <td>Strafbetrag</td>
-      </tr>
-      {% for summary_object in game_summary_objects %}
-        <tr class="text-center text-style">
-              <td style="vertical-align: middle;">
-                {{summary_object.participant_name}}
-              </td>
-          {% for penalty in summary_object.penalties %}
-          <td>
-            <div >{{penalty.penalty_quantity}}</div>
-          </td>
-          {% endfor %}
-          <td>{{ summary_object.participant_total_fine.total_pay_amount }} €</td>
-        </tr>
-        {% endfor%}
-      </tr>
-    </tbody>
-  </table>
   {% endblock %}

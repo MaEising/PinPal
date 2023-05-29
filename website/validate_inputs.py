@@ -2,7 +2,7 @@ from flask import jsonify, redirect, url_for, flash
 from flask_login import  current_user
 from .models import GameEntity, GameStatus
 import re
-from logger_config import setup_logger
+from .logger_config import setup_logger
 
 logger = setup_logger()
 

@@ -190,21 +190,21 @@ def update_quantity():
     if action == 'add':
         target_PenaltyRecordEntity.quantity += 1
         is_performed = True
+        total_fine.add_value(target_PenaltyRecordEntity.penalty.pay_amount)
     elif action == 'subtract' and target_PenaltyRecordEntity.quantity >= 1:
         target_PenaltyRecordEntity.quantity -= 1
         is_performed = True
-    # Get total_fine value, set totalFine value to new pay_amount
+        total_fine.subtract_value(target_PenaltyRecordEntity.penalty.pay_amount)
     if is_performed:
-        total_fine_value = total_fine.get_value()
-        total_fine_value = target_PenaltyRecordEntity.quantity * target_PenaltyRecordEntity.penalty.pay_amount
-        total_fine.set_value(total_fine_value)
-        print("TOTAL FINE HAS BEEN UPDATED TO", total_fine.get_value())
+        logger.debug("Gesamtbetrag fuer {} auf {} geaendert".format(current_user.email,total_fine.get_total_pay_amount()))
         # commit all to database
         db.session.add(target_PenaltyRecordEntity)
         db.session.add(total_fine)
         db.session.commit()
 
     return redirect(url_for('views.view_game', game_id = game_id))
+
+# Sets the TotalFineEntity payamount of a participant by adding up all quantities * the penalty pay amount of all penalties
 
 @configure.route('/delete_game/<int:game_id>', methods=['POST'])
 @login_required
@@ -262,7 +262,7 @@ def finish_game(game_id):
 # Generate some initial penelties on user creation for better experience 
 # called on user creation in auth.py
 def initial_object_generation(user_id,username):
-    db.session.add(PenaltyEntity(pay_amount=0.30,title="Glocke",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=0.40,title="Rinne",user_id=user_id))
     db.session.add(PenaltyEntity(pay_amount=1.00,title="Klingel",user_id=user_id))
     db.session.add(PenaltyEntity(pay_amount=1.00,title="Ochsengasse",user_id=user_id))
     db.session.add(ParticipantEntity(username=username,user_id=user_id,status=ParticipantStatus.active))

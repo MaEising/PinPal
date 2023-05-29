@@ -55,7 +55,7 @@ def view_game(game_id):
     if game_participants is None or game_participants == "":
         flash("invalid game", category="error")
         return render_template("create_or_load_game.html", user=current_user)
-    logger.debug("Game Status for user {} is {}".format(current_user.email,game.status))
+    logger.info("Game Status for user {} is {}".format(current_user.email,game.status))
     if game.status == GameStatus.active:
         participants_data = []
         # Iterate through all participant ids
