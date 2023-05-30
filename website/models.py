@@ -7,6 +7,9 @@ import datetime
 import json
 import random
 import os, os.path
+from .logger_config import setup_logger
+
+logger = setup_logger()
 
 # There is a convention in flask sqlalchemy to convert CamelCase tablenames to camel_case
 # when creating a foreign key to reference the table name use the camel_case as reference
@@ -74,6 +77,7 @@ class ParticipantEntity(db.Model):
         self.update_avatar_index()
 
     def update_avatar_index(self):
+        logger.debug("Set avatar_index to {}".format(self.avatar_index))
         avatar_directory = 'website/static/images/profile_avatars'
         avatar_files = os.listdir(avatar_directory)
         num_files = len(avatar_files)
@@ -98,7 +102,6 @@ class PenaltyRecordEntity(db.Model):
         else:
             self.date_created = date_created
 
-# XXX Refactor this
 class TotalFineEntity(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     participant_id = db.Column(db.Integer, db.ForeignKey('participant_entity.id'))

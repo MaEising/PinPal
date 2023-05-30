@@ -9,7 +9,6 @@
   </thead>  
   <tbody>
     {% for player_record in player_record_list %}
-    <!-- {% set avatar_index = range(1, 9) | random %} -->
     {% set avatar_path = '/static/images/profile_avatars/avatar' + player_record.avatar_index|string + '.png' %}
     <tr class="text-center text-style">
       <td style="vertical-align: middle">
@@ -57,14 +56,6 @@
   </tbody>
 </table>
 <form
-  action="{{ url_for('configure.save_game', game_id = game.id) }}"
-  method="POST"
->
-  <button type="submit" class="mb-4 game-save-btn btn-primary">
-    Speichern
-  </button>
-</form>
-<form
   action="{{ url_for('configure.finish_game', game_id = game.id) }}"
   method="POST"
 >
@@ -72,6 +63,4 @@
     Abend beenden
   </button>
 </form>
-<br />
-<br />
 {% endblock %}

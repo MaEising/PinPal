@@ -9,26 +9,6 @@ auth = Blueprint('auth', __name__)
 
 
 logger = setup_logger()
-
-@auth.route('/login', methods=['GET','POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-        
-        user = UserEntity.query.filter_by(email=email).first() # return first result with this email
-        if user: # if one was found
-            if check_password_hash(user.password, password):
-                flash('Logged in successfully', category='success')
-                login_user(user, remember=True)
-                logger.info("User {} login".format(current_user.email))
-                return redirect(url_for('views.home'))
-            else:
-                flash('incorrect password, try again.',category='error')
-        else:
-            flash('Email does not exist.', category='error')
-    return render_template("login.html", user=current_user)
-
 @auth.route('/logout')
 @login_required
 def logout():
@@ -67,3 +47,22 @@ def sign_up():
             logger.info("User {} login".format(email))
             return redirect(url_for('views.home'))
     return render_template("signup.html", user=current_user)
+
+@auth.route('/login', methods=['GET','POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        user = UserEntity.query.filter_by(email=email).first() # return first result with this email
+        if user: # if one was found
+            if check_password_hash(user.password, password):
+                flash('Logged in successfully', category='success')
+                login_user(user, remember=True)
+                logger.info("User {} login".format(current_user.email))
+                return redirect(url_for('views.home'))
+            else:
+                flash('incorrect password, try again.',category='error')
+        else:
+            flash('Email does not exist.', category='error')
+    return render_template("login.html", user=current_user)

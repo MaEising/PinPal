@@ -109,12 +109,12 @@ def new_game():
     records = []
     if game.id == None:
         flash('Something went wrong when creating the game','error')
-    for player_id in participant_ids:
-        fine_record = TotalFineEntity(game_id=game.id, participant_id=player_id)
+    for id in participant_ids:
+        fine_record = TotalFineEntity(game_id=game.id, participant_id=id)
         db.session.add(fine_record)
         for penalty in all_penalties:
             try: 
-                participant_record = PenaltyRecordEntity(game_id=game.id, participant_id=player_id, penalty_id = penalty.id)
+                participant_record = PenaltyRecordEntity(game_id=game.id, participant_id=id, penalty_id = penalty.id)
                 records.append(participant_record)
             except:
                 logger.debug("PenaltyRecordEntities for user {} could not be added to database".format(current_user.email))
@@ -218,18 +218,6 @@ def delete_game(game_id):
     db.session.delete(game_to_delete)
     db.session.commit()
     return redirect(url_for('views.view_archive'))
-
-@configure.route('/save_game/<int:game_id>', methods=['POST'])
-@login_required
-def save_game(game_id):
-    if request.method != 'POST':
-        abort(405)
-    validate_gameid(game_id)
-    game_entity = GameEntity.query.filter_by(id = game_id, user_id = current_user.id).first()
-    game_entity.status = GameStatus.save
-    db.session.add(game_entity)
-    db.session.commit()
-    return redirect(url_for('views.view_game', game_id = game_entity.id))
 
 @configure.route('/load_game/<int:game_id>', methods=['GET'])
 @login_required

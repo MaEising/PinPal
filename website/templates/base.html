@@ -24,7 +24,7 @@
     <title>{% block title %}{% endblock %}</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <button
         class="navbar-toggler"
         type="button"
@@ -44,7 +44,7 @@
           {% endif %}
         </div>
       </div>
-    </nav>
+    </nav> -->
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %} {% for category, message in messages %} {% if category ==
     'error' %}
@@ -64,6 +64,18 @@
     {% endif %} {% endfor %} {% endif %} {% endwith %}
     <div class="container">
       {% block content %} {% endblock %}
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
       <footer>
         <div class="footer">
           <div class="footer-column">Contact</div>
