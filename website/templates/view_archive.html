@@ -1,17 +1,16 @@
 {% extends "base.html" %} {% block title %}Spieler Übersicht {% endblock %} {%
 block content %}
-<div style="display: flex; flex-wrap: wrap">
-  <div style="flex: 1; margin: auto; padding: 15px">
-    <button
-      style="outline: none; border: 0; background: none"
-      onclick="location.href='/'"
-    >
-      <img
-        src="/static/images/beer_landing_page_small_size.png"
-        class="logo-picture"
-      />
-    </button>
-  </div>
+<div style="flex: 1; margin: auto; padding: 15px">
+  <button
+    style="outline: none; border: 0; background: none"
+    onclick="location.href='/'"
+  >
+    <img
+      src="/static/images/beer_landing_page_small_size.png"
+      class="logo-picture"
+    />
+  </button>
+
   <table class="center table table-responsive">
     <thead>
       <tr class="text-center text-style">
@@ -20,27 +19,33 @@ block content %}
     </thead>
     <tbody>
       {% for game in all_finished_games %}
-        <tr class="text-center text-style">
-              <td style="vertical-align: middle;">
-                <form action="{{ url_for('views.game_summary',game_id = game.id) }}"
-                method="POST">
-                <input type="hidden" name="id" value="{{ game.id }}">
-                <input type="submit" class="archived_game_button" value="Abend vom {{
-                  game.date_created.strftime('%Y-%m-%d') }}">
-              </form>
-              </td>
-              <td>
-                <form
-                  action="{{ url_for('configure.delete_game', game_id = game.id) }}"
-                  method="POST"
-                >
-                  <input type="hidden" name="id" value="{{ game.id }}" />
-                  <button type="submit" class="penalty-button btn-danger">X</button>
-                </form>
-              </td>
-        </tr>
-        {% endfor%}
+      <tr class="text-center text-style">
+        <td style="vertical-align: middle">
+          <form
+            action="{{ url_for('views.game_summary',game_id = game.id) }}"
+            method="POST"
+          >
+            <input type="hidden" name="id" value="{{ game.id }}" />
+            <input
+              type="submit"
+              class="archived_game_button"
+              value="Abend vom {{
+                  game.date_created.strftime('%Y-%m-%d') }}"
+            />
+          </form>
+        </td>
+        <td>
+          <form
+            action="{{ url_for('configure.delete_game', game_id = game.id) }}"
+            method="POST"
+          >
+            <input type="hidden" name="id" value="{{ game.id }}" />
+            <button type="submit" class="penalty-button btn-danger">X</button>
+          </form>
+        </td>
       </tr>
+      {% endfor%}
     </tbody>
   </table>
+</div>
 {% endblock %}

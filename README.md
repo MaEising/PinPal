@@ -5,13 +5,12 @@
 - im usermanagement und in gamecreation site Usernamen umbrechen ab 7 Zeichen, mehr als 10 Zeichen sollten mit ... versteckt werden
 - Usability bei der Menüführung: wie vermitteln dass man sich durch den Button ins Menü klickt? Flow ändern das man erst auf registrieren Seite landet und dann vlcht ein Button mit "direkt zum login"
 - build local hosting for webapp using [this](https://www.instructables.com/Using-a-Raspberry-PI-Zero-W-As-an-Access-Point-and/)
+- penalty Seite (und andere?) umdesignen: aussehen wie [hier](https://www.rockanutrition.de/pages/kalorienrechner-app#/step2). Ggf in Figma Linux zuerst anlegen
 
 ### Work in Progress:
 
 - Logging in jeder funktion unterbringen (info) warning / debug im laufe des codes und an stellen wo prints gesetzt sind
-- Usability verbessern und am Handy Strichliste nutzbar machen
-  - game_configuration: wip: Funktion um hideRows sichtbar zu machen
-    - die Rows müssen beim erneuten Aufruf der Funktion wieder versteckt werden -> bleiben permanent Sichtbar nach dem ersten klicken
+- invert funktion in create_penalty annehmen und verarbeiten
 
 ### IDEAS
 

@@ -1,3 +1,59 @@
+@font-face {
+  font-family: "Poppins";
+  font-weight: normal;
+  font-style: italic;
+  src: url("/static/fonts/Poppins-Italic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 300;
+  font-style: normal;
+  src: url("/static/fonts/Poppins-Light.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 500;
+  font-style: normal;
+  src: url("/static/fonts/Poppins-Medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 600;
+  font-style: italic;
+  src: url("/static/fonts/Poppins-SemiBoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 300;
+  font-style: italic;
+  src: url("/static/fonts/Poppins-LightItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 500;
+  font-style: italic;
+  src: url("/static/fonts/Poppins-MediumItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: normal;
+  font-style: normal;
+  src: url("/static/fonts/Poppins-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  font-weight: 600;
+  font-style: normal;
+  src: url("/static/fonts/Poppins-SemiBold.ttf") format("truetype");
+}
+
 body {
   background-color: white;
 }
@@ -30,9 +86,10 @@ body {
   flex: 0 0 33.3333%;
 }
 .checkbox {
+  margin-left: 10px;
   width: 30px;
   height: 30px;
-  border: 2px solid black;
+  border: 3px solid black;
 }
 
 .center {
@@ -92,11 +149,16 @@ table.border {
   color: #000000;
 }
 
+.text-gray-500 {
+  font-family: "Poppins";
+  color: #777777;
+  font-weight: 600;
+  font-size: 20px;
+}
 .form-control {
   width: 237px;
   height: 64px;
 }
-
 .footer {
   width: 390px;
 

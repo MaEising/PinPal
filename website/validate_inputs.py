@@ -19,6 +19,6 @@ def delete_game_check(game_id):
     if not game_to_delete:
         flash("Game not found or unauthorized",category="error")
         return redirect(url_for('views.view_archive'))
-    if not game_to_delete.status == GameStatus.FINISH:
+    if not game_to_delete.status == GameStatus.finish:
         flash("Game is still running or broken",category="error")
         return redirect(url_for('views.view_archive'))
