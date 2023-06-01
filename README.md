@@ -6,6 +6,8 @@
 - Usability bei der Menüführung: wie vermitteln dass man sich durch den Button ins Menü klickt? Flow ändern das man erst auf registrieren Seite landet und dann vlcht ein Button mit "direkt zum login"
 - build local hosting for webapp using [this](https://www.instructables.com/Using-a-Raspberry-PI-Zero-W-As-an-Access-Point-and/)
 - penalty Seite (und andere?) umdesignen: aussehen wie [hier](https://www.rockanutrition.de/pages/kalorienrechner-app#/step2). Ggf in Figma Linux zuerst anlegen
+- error handling und validierung implementieren
+- große funktionen kleiner machen
 
 ### Work in Progress:
 
