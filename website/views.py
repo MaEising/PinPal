@@ -77,12 +77,12 @@ def view_game(game_id):
     return render_template("view_game.html",user=current_user, game=game, all_penalties=all_penalties, player_record_list = participants_data)
 
 # Display finished game summary
-@views.route('/game_summary/<game_id>', methods=['POST'])
+@views.route('/game_summary/<game_id>', methods=['POST','GET'])
 @login_required
 def game_summary(game_id):
-    # Create a game summary object and map everything so far obtained to it in the finish_game endpoint
-    if request.method != 'POST':
+    if request.method != 'POST' and request.method !='GET':
         abort(405)
+    # Create a game summary object and map everything so far obtained to it in the finish_game endpoint
     all_penalties = PenaltyEntity.query.filter_by(user_id = current_user.id).all()
     target_game = GameEntity.query.filter_by(id = game_id, user_id = current_user.id).first()
     if target_game and target_game.status == GameStatus.finish:
