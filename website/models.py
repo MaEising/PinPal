@@ -56,11 +56,13 @@ class PenaltyEntity(db.Model):
     pay_amount = db.Column(db.Float)
     title = db.Column(db.String(50))
     user_id = db.Column(db.Integer, db.ForeignKey('user_entity.id'))
+    invert = db.Column(db.Boolean)
 
-    def __init__(self, pay_amount, title, user_id):
+    def __init__(self, pay_amount, title, user_id, invert=False):
         self.pay_amount = pay_amount
         self.title = title
         self.user_id = user_id
+        self.invert = invert
 
 
 class ParticipantEntity(db.Model):

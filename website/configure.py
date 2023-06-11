@@ -137,7 +137,10 @@ def new_penalty():
         sanitize_pay_amount(pay_amount)
         title = request.form.get('title')
         title = sanitize_string(title)
-    penalty = PenaltyEntity(pay_amount = pay_amount, title = title, user_id = current_user.id)
+        if request.form.get('is_invert'):
+            penalty = PenaltyEntity(pay_amount = pay_amount, title = title, user_id = current_user.id, invert=True)
+        else:
+            penalty = PenaltyEntity(pay_amount = pay_amount, title = title, user_id = current_user.id)
     db.session.add(penalty)
     db.session.commit()
     all_penalties = PenaltyEntity.query.filter_by(user_id=current_user.id).all
