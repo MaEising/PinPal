@@ -129,6 +129,10 @@ td:first-child {
   text-align: center;
 }
 
+tr.text-center.text-style {
+  white-space: nowrap;
+}
+
 table input[type="text"] {
   font-family: "Poppins", sans-serif;
   text-align: center;
