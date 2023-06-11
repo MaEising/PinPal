@@ -184,6 +184,7 @@ def update_inverted_quantity(target_PenaltyRecordEntity, all_other_total_fines ,
             total_fine.add_value(target_PenaltyRecordEntity.penalty.pay_amount)
         elif action == 'subtract' and target_PenaltyRecordEntity.quantity >= 1:
             total_fine.subtract_value(target_PenaltyRecordEntity.penalty.pay_amount)
+        db.session.add(total_fine)
         logger.debug("total_fine for participant {} has been updated to {}".format(total_fine.participant_id,total_fine.total_pay_amount))
 
 
@@ -221,7 +222,6 @@ def update_quantity():
         all_total_fine_entities = TotalFineEntity.query.filter_by(game_id=game_id).all()
         update_inverted_quantity(target_PenaltyRecordEntity,all_total_fine_entities, action)
         db.session.add(target_PenaltyRecordEntity)
-        db.session.add(all_total_fine_entities)
         db.session.commit()
     if update_quantity_and_total_fine(target_PenaltyRecordEntity, total_fine, action):
         logger.debug("Gesamtbetrag fuer {} auf {} geaendert".format(current_user.email,total_fine.get_total_pay_amount()))
