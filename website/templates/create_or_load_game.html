@@ -1,17 +1,17 @@
 {% extends "base.html" %} {% block title %}Spieler Übersicht {% endblock %} {%
 block content %}
+<div style="flex: 1; margin: auto">
+  <button
+    style="outline: none; border: 0; background: none"
+    onclick="location.href='/'"
+  >
+    <img
+      src="/static/images/beer_landing_page_small_size.png"
+      class="logo-picture"
+    />
+  </button>
+</div>
 <div style="display: flex; flex-wrap: wrap">
-  <div style="flex: 1; margin: auto">
-    <button
-      style="outline: none; border: 0; background: none"
-      onclick="location.href='/'"
-    >
-      <img
-        src="/static/images/beer_landing_page_small_size.png"
-        class="logo-picture"
-      />
-    </button>
-  </div>
   <div style="flex: 1; margin: auto">
     <div id="wrapper">
       <form

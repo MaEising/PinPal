@@ -1,29 +1,38 @@
 {% extends "base.html" %} {% block title %} Kegelabend {{
-  game.date_created.strftime('%Y-%m-%d') }} {% endblock %} {% block content %}
-  <script src="/static/js/game_configuration.js"></script>
-  <table class="table table-responsive">
+game.date_created.strftime('%Y-%m-%d') }} {% endblock %} {% block content %}
+<script src="/static/js/game_configuration.js"></script>
+<table class="table table-responsive">
   <thead>
     <tr class="text-center text-style">
       <th colspan="{{ all_penalties|length + 2 }}">Gametable</th>
     </tr>
-  </thead>  
+  </thead>
   <tbody>
-    {% for player_record in player_record_list %}
-    {% set avatar_path = '/static/images/profile_avatars/avatar' + player_record.avatar_index|string + '.png' %}
+    {% for player_record in player_record_list %} {% set avatar_path =
+    '/static/images/profile_avatars/avatar' + player_record.avatar_index|string
+    + '.png' %}
     <tr class="text-center text-style">
       <td style="vertical-align: middle">
-        <div onclick="toggleUserPenalties('{{ player_record.game_id}}-{{ player_record.participant_id }}-tablecell')" class="player-square square-border">{{player_record.participant_name}}
-        <img src="{{ avatar_path }}" alt="Avatar" class="avatar-image">
-        </td></div>
-
+        <div
+          onclick="toggleUserPenalties('{{ player_record.game_id}}-{{ player_record.participant_id }}-tablecell')"
+          class="player-square square-border"
+        >
+          <img src="{{ avatar_path }}" alt="Avatar" class="avatar-image" />
+          {{player_record.participant_name}}
+        </div>
+      </td>
       {% for penalty in player_record.penalties %}
-      <td class="hideRow" id="{{ player_record.game_id}}-{{ player_record.participant_id }}-tablecell" style="min-width: 150px">
-        <br>
+      <td
+        class="hideRow"
+        id="{{ player_record.game_id}}-{{ player_record.participant_id }}-tablecell"
+        style="min-width: 150px"
+      >
+        <br />
         {{penalty.penalty_name}}
-        <br>
+        <br />
         <div
           id="{{player_record.game_id}}-{{penalty.id}}-{{player_record.participant_id}}-{{penalty.penalty_amount}}-penalty-quantity"
-        > 
+        >
           {{penalty.penalty_quantity}}
         </div>
         <button
@@ -47,9 +56,13 @@
       </td>
       {% endfor %}
       <td>
-      <div 
-        id="{{ player_record.game_id }}-{{ player_record.participant_id }}-total-fine" style="vertical-align: middle"> <br>{{player_record.participant_total_fine.total_pay_amount| default(0)}} €
-      </div>
+        <div
+          id="{{ player_record.game_id }}-{{ player_record.participant_id }}-total-fine"
+          style="vertical-align: middle"
+        >
+          <br />{{player_record.participant_total_fine.total_pay_amount|
+          default(0)}} €
+        </div>
       </td>
     </tr>
     {% endfor%}
