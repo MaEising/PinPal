@@ -18,8 +18,8 @@ game.date_created.strftime('%Y-%m-%d') }} {% endblock %} {% block content %}
           class="player-square square-border"
         >
           <img src="{{ avatar_path }}" alt="Avatar" class="avatar-image" />
-          {{player_record.participant_name}}
         </div>
+        <a class="participant_name">{{player_record.participant_name}}</a>
       </td>
       {% for penalty in player_record.penalties %}
       <td

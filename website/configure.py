@@ -219,8 +219,11 @@ def update_quantity():
     # Update the quantity inside the Database depending on the chosen action in the frontend. Make sure the quantity is not negative
     logger.debug("This is the whole target_penaltyRecordEntity check where the invert bool is: {}".format(target_PenaltyRecordEntity.penalty.invert))
     if target_PenaltyRecordEntity.penalty.invert:
-        all_total_fine_entities = TotalFineEntity.query.filter_by(game_id=game_id).all()
-        update_inverted_quantity(target_PenaltyRecordEntity,all_total_fine_entities, action)
+        print("Target Participant id is:",participant_id)
+        total_fine_entities = TotalFineEntity.query.filter_by(game_id=game_id).all()
+        # remove FineEntity of quantity_update issuer, only the other should be updated
+        total_fine_entities = [entity for entity in total_fine_entities if entity.participant_id != int(participant_id)]
+        update_inverted_quantity(target_PenaltyRecordEntity,total_fine_entities, action)
         db.session.add(target_PenaltyRecordEntity)
         db.session.commit()
     if update_quantity_and_total_fine(target_PenaltyRecordEntity, total_fine, action):
