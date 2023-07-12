@@ -19,14 +19,16 @@ content %}
     action="{{ url_for('configure.new_penalty') }}"
     method="POST"
   >
-    <label for="title">Title: </label>
+    <label style="margin-left: 15%; width: 100%" for="title">Title: </label>
     <input
       type="text"
       id="title"
       name="title"
-      class="form-control list-column"
+      class="center form-control list-column"
     />
-    <label for="pay_amount">Pay Amount:</label>
+    <label style="margin-left: 15%; width: 100%" for="pay_amount"
+      >Pay Amount:</label
+    >
     <input
       type="text"
       id="pay_amount"
@@ -36,15 +38,23 @@ content %}
       title="Please enter a valid pay amount in the format 0.20 or 0,20"
       class="form-control list-column"
     />
-    <div class="text-gray-500 mt-4">
-      Invert?
-      <input
-        class="checkbox"
-        type="checkbox"
-        id="is_invert"
-        title="Invertieren"
-      />
-    </div>
+    <table style="margin-left: 1%; width: 100%">
+      <tr>
+        <td></td>
+        <td><br /></td>
+      </tr>
+      <tr class="text-gray-500 mt-4">
+        <td>Invert?</td>
+        <td>
+          <input
+            class="checkbox"
+            type="checkbox"
+            name="is_invert"
+            title="is_invert"
+          />
+        </td>
+      </tr>
+    </table>
     <button class="list-column mt-4 btn btn-primary" type="submit">
       Create Penalty
     </button>
@@ -64,7 +74,7 @@ content %}
     </thead>
     <tbody style="width: 100%">
       {% for penalty in all_penalties %}
-      <tr class="text-center text-style" style="white-space: nowrap">
+      <tr class="text-center text-style">
         <td>{{ penalty.title }}</td>
         <td>{{ penalty.pay_amount}} €</td>
         <td>

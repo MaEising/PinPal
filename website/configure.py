@@ -137,7 +137,10 @@ def new_penalty():
         sanitize_pay_amount(pay_amount)
         title = request.form.get('title')
         title = sanitize_string(title)
-    penalty = PenaltyEntity(pay_amount = pay_amount, title = title, user_id = current_user.id)
+        if request.form.get('is_invert'):
+            penalty = PenaltyEntity(pay_amount = pay_amount, title = title, user_id = current_user.id, invert=True)
+        else:
+            penalty = PenaltyEntity(pay_amount = pay_amount, title = title, user_id = current_user.id)
     db.session.add(penalty)
     db.session.commit()
     all_penalties = PenaltyEntity.query.filter_by(user_id=current_user.id).all
@@ -153,17 +156,37 @@ def delete_penalty(penalty_id):
         flash('Penalty successfully deleted',category='success')
     return redirect(url_for('views.penalties'))
 
+# The total_fine for the Player that got a penalty is not updated if the penalty is inverted because this means everybody elses total_fine is increased.
+# The total_fine increase for everybody else is handled in update_inverted_quantity()
 def update_quantity_and_total_fine(target_PenaltyRecordEntity, total_fine, action):
     is_performed = False
     if action == 'add':
         target_PenaltyRecordEntity.quantity += 1
-        total_fine.add_value(target_PenaltyRecordEntity.penalty.pay_amount)
+        if not target_PenaltyRecordEntity.penalty.invert:
+            total_fine.add_value(target_PenaltyRecordEntity.penalty.pay_amount)
         is_performed = True
     elif action == 'subtract' and target_PenaltyRecordEntity.quantity >= 1:
         target_PenaltyRecordEntity.quantity -= 1
-        total_fine.subtract_value(target_PenaltyRecordEntity.penalty.pay_amount)
+        if not target_PenaltyRecordEntity.penalty.invert:
+            total_fine.subtract_value(target_PenaltyRecordEntity.penalty.pay_amount)
         is_performed = True
     return is_performed
+
+# Increase the quantity inside target_PenaltyRecordEntity, increase / decrease all_other_total_fines with the target_PenaltyRecordEntity.penalty.pay_amount
+# XXX Find a more pythonic way to write this, the if statements look ugly af
+def update_inverted_quantity(target_PenaltyRecordEntity, all_other_total_fines ,action):
+    if action == 'add':
+        target_PenaltyRecordEntity.quantity += 1
+    elif action == 'subtract' and target_PenaltyRecordEntity.quantity >= 1:
+        target_PenaltyRecordEntity.quantity -= 1
+    for total_fine in all_other_total_fines:
+        if action == 'add':
+            total_fine.add_value(target_PenaltyRecordEntity.penalty.pay_amount)
+        elif action == 'subtract' and target_PenaltyRecordEntity.quantity >= 1:
+            total_fine.subtract_value(target_PenaltyRecordEntity.penalty.pay_amount)
+        db.session.add(total_fine)
+        logger.debug("total_fine for participant {} has been updated to {}".format(total_fine.participant_id,total_fine.total_pay_amount))
+
 
 @configure.route('/update_quantity', methods=['POST'])
 @login_required
@@ -194,6 +217,15 @@ def update_quantity():
     target_PenaltyRecordEntity = PenaltyRecordEntity.query.filter_by(game_id=game_id, penalty_id=penalty_id, participant_id=participant_id).first()
     total_fine = TotalFineEntity.query.filter_by(game_id=game_id, participant_id=participant_id).first()
     # Update the quantity inside the Database depending on the chosen action in the frontend. Make sure the quantity is not negative
+    logger.debug("This is the whole target_penaltyRecordEntity check where the invert bool is: {}".format(target_PenaltyRecordEntity.penalty.invert))
+    if target_PenaltyRecordEntity.penalty.invert:
+        print("Target Participant id is:",participant_id)
+        total_fine_entities = TotalFineEntity.query.filter_by(game_id=game_id).all()
+        # remove FineEntity of quantity_update issuer, only the other should be updated
+        total_fine_entities = [entity for entity in total_fine_entities if entity.participant_id != int(participant_id)]
+        update_inverted_quantity(target_PenaltyRecordEntity,total_fine_entities, action)
+        db.session.add(target_PenaltyRecordEntity)
+        db.session.commit()
     if update_quantity_and_total_fine(target_PenaltyRecordEntity, total_fine, action):
         logger.debug("Gesamtbetrag fuer {} auf {} geaendert".format(current_user.email,total_fine.get_total_pay_amount()))
         # commit all to database

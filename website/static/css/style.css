@@ -68,20 +68,7 @@ body {
 .navbar .dropdown-menu {
   background-color: #e79a27 !important; /* change the background color of the dropdown menu */
 }
-.container {
-  position: relative;
-  min-height: 100%;
-  width: 390px;
-  height: 844px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  border: 3px solid rgb(0, 0, 0);
-  border-radius: 25px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
+
 .column {
   flex: 0 0 33.3333%;
 }
@@ -108,11 +95,101 @@ body {
   flex-wrap: wrap;
 }
 
-.logo-picture {
-  height: 350px;
-  width: 350px;
+/* Styles for desktop PCs */
+@media (min-width: 769px) {
+  .container {
+    position: relative;
+    min-height: 100%;
+    width: 390px;
+    height: 844px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    border: 3px solid rgb(0, 0, 0);
+    border-radius: 25px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .menu_square {
+    margin: 1vw 0;
+    height: 130px;
+    width: 130px;
+  }
+  .logo-picture {
+    max-width: 100%;
+    height: auto;
+  }
+  .footer {
+    width: 21vw;
+    box-sizing: border-box;
+
+    height: 60px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    background: #e79a27;
+    border: 3px solid #000000;
+    border-radius: 5px;
+  }
+
+  .participant_name {
+    display: flex;
+    align-items: center;
+    margin-left: 0.2vw; /* Adjust the margin as needed */
+  }
 }
 
+/* Styles for mobile devices */
+@media (max-width: 768px) {
+  .container {
+    position: relative;
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    border: 3px solid rgb(0, 0, 0);
+    border-radius: 25px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 100vh;
+    width: 100vw;
+  }
+  .menu_square {
+    margin: 6vw 0;
+    height: 34vw;
+    width: 34vw;
+  }
+  .logo-picture {
+    max-width: 105%;
+    height: auto;
+  }
+  .footer {
+    width: 100vw;
+
+    box-sizing: border-box;
+
+    height: 64px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    background: #e79a27;
+    border: 3px solid #000000;
+    border-radius: 5px;
+  }
+
+  .participant_name {
+    display: flex;
+    align-items: center;
+    margin-left: 1.1vw; /* Adjust the margin as needed */
+  }
+}
 table {
   table-layout: fixed;
 }
@@ -127,6 +204,10 @@ td {
 td:first-child {
   width: 100%;
   text-align: center;
+}
+
+tr.text-center.text-style {
+  white-space: nowrap;
 }
 
 table input[type="text"] {
@@ -158,21 +239,6 @@ table.border {
 .form-control {
   width: 237px;
   height: 64px;
-}
-.footer {
-  width: 390px;
-
-  box-sizing: border-box;
-
-  height: 64px;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-
-  background: #e79a27;
-  border: 3px solid #000000;
-  border-radius: 5px;
 }
 
 .footer-column {
@@ -316,7 +382,6 @@ table.border {
 .hideRow {
   display: none;
 }
-
 .avatar-image {
   max-width: 100%;
   max-height: 100%;
