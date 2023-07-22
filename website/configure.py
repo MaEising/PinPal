@@ -170,10 +170,10 @@ def update_quantity_and_total_fine(target_PenaltyRecordEntity, total_fine, actio
         if not target_PenaltyRecordEntity.penalty.invert:
             total_fine.subtract_value(target_PenaltyRecordEntity.penalty.pay_amount)
         is_performed = True
+    logger.debug("TotalFine for {} updated to {}".format(current_user.id,total_fine.total_pay_amount))
     return is_performed
 
 # Increase the quantity inside target_PenaltyRecordEntity, increase / decrease all_other_total_fines with the target_PenaltyRecordEntity.penalty.pay_amount
-# XXX Find a more pythonic way to write this, the if statements look ugly af
 def update_inverted_quantity(target_PenaltyRecordEntity, all_other_total_fines ,action):
     if action == 'add':
         target_PenaltyRecordEntity.quantity += 1
