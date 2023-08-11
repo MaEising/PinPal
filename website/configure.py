@@ -87,8 +87,6 @@ def delete_participant(participant_id):
 
 
 ###* GAME SECTION 
-# TODO move this into seperate game configuration file
-
 @configure.route('/new_game', methods=['POST'])
 @login_required
 def new_game():
@@ -162,13 +160,11 @@ def update_quantity_and_total_fine(target_PenaltyRecordEntity, total_fine, actio
     is_performed = False
     if action == 'add':
         target_PenaltyRecordEntity.quantity += 1
-        if not target_PenaltyRecordEntity.penalty.invert:
-            total_fine.add_value(target_PenaltyRecordEntity.penalty.pay_amount)
+        total_fine.add_value(target_PenaltyRecordEntity.penalty.pay_amount)
         is_performed = True
     elif action == 'subtract' and target_PenaltyRecordEntity.quantity >= 1:
         target_PenaltyRecordEntity.quantity -= 1
-        if not target_PenaltyRecordEntity.penalty.invert:
-            total_fine.subtract_value(target_PenaltyRecordEntity.penalty.pay_amount)
+        total_fine.subtract_value(target_PenaltyRecordEntity.penalty.pay_amount)
         is_performed = True
     logger.debug("TotalFine for {} updated to {}".format(current_user.id,total_fine.total_pay_amount))
     return is_performed
@@ -193,7 +189,6 @@ def update_inverted_quantity(target_PenaltyRecordEntity, all_other_total_fines ,
 # Updates the given PenaltyRecord.penalty.quantity for one participant inside a game, writes the changes to the PenaltyRecordEntity database object
 # also the total_fine the participant has to pay is updated inside the database
 def update_quantity():
-    is_performed = False
     if request.method != 'POST':
         abort(405)
     data = request.json
@@ -217,15 +212,14 @@ def update_quantity():
     target_PenaltyRecordEntity = PenaltyRecordEntity.query.filter_by(game_id=game_id, penalty_id=penalty_id, participant_id=participant_id).first()
     total_fine = TotalFineEntity.query.filter_by(game_id=game_id, participant_id=participant_id).first()
     # Update the quantity inside the Database depending on the chosen action in the frontend. Make sure the quantity is not negative
-    logger.debug("This is the whole target_penaltyRecordEntity check where the invert bool is: {}".format(target_PenaltyRecordEntity.penalty.invert))
     if target_PenaltyRecordEntity.penalty.invert:
-        print("Target Participant id is:",participant_id)
         total_fine_entities = TotalFineEntity.query.filter_by(game_id=game_id).all()
         # remove FineEntity of quantity_update issuer, only the other should be updated
         total_fine_entities = [entity for entity in total_fine_entities if entity.participant_id != int(participant_id)]
         update_inverted_quantity(target_PenaltyRecordEntity,total_fine_entities, action)
         db.session.add(target_PenaltyRecordEntity)
         db.session.commit()
+        return redirect(url_for('views.view_game', game_id = game_id))
     if update_quantity_and_total_fine(target_PenaltyRecordEntity, total_fine, action):
         logger.debug("Gesamtbetrag fuer {} auf {} geaendert".format(current_user.email,total_fine.get_total_pay_amount()))
         # commit all to database
@@ -235,7 +229,6 @@ def update_quantity():
     return redirect(url_for('views.view_game', game_id = game_id))
 
 # Sets the TotalFineEntity payamount of a participant by adding up all quantities * the penalty pay amount of all penalties
-
 @configure.route('/delete_game/<int:game_id>', methods=['POST'])
 @login_required
 def delete_game(game_id):
