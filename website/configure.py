@@ -1,7 +1,7 @@
 from . import db
 from .models import GameEntity,GameStatus, PenaltyEntity, PenaltyRecordEntity,ParticipantStatus, ParticipantEntity, TotalFineEntity
 from .sanitize_inputs import sanitize_pay_amount, sanitize_participant_ids, sanitize_participant_id, sanitize_string
-from .validate_inputs import delete_game_check, validate_gameid
+from .validate_inputs import delete_game_check, validate_gameid, validate_quantity_input
 from flask import Blueprint, render_template, request, flash, redirect, url_for, abort, jsonify
 from flask_login import login_required, current_user
 from .logger_config import setup_logger
@@ -135,10 +135,12 @@ def new_penalty():
         sanitize_pay_amount(pay_amount)
         title = request.form.get('title')
         title = sanitize_string(title)
-        if request.form.get('is_invert'):
+        if request.form.get('invert'):
             penalty = PenaltyEntity(pay_amount = pay_amount, title = title, user_id = current_user.id, invert=True)
+            logger.info("User {} created new inverted penalty".format(current_user.id))
         else:
             penalty = PenaltyEntity(pay_amount = pay_amount, title = title, user_id = current_user.id)
+            logger.info("User {} created new penalty".format(current_user.id))
     db.session.add(penalty)
     db.session.commit()
     all_penalties = PenaltyEntity.query.filter_by(user_id=current_user.id).all
@@ -191,22 +193,7 @@ def update_inverted_quantity(target_PenaltyRecordEntity, all_other_total_fines ,
 def update_quantity():
     if request.method != 'POST':
         abort(405)
-    data = request.json
-    penalty_id = data.get("penaltyId")
-    participant_id = data.get("participantId")
-    action = data.get("action")
-    game_id = data.get("game_id")
-    # Validate input data
-    if not re.match(r'^[0-9]+', str(game_id)):
-        return jsonify({"status": "error", "message": "Invalid game ID"}), 400
-    if not re.match(r'^[0-9]+', str(penalty_id)):
-        return jsonify({"status": "error", "message": "Invalid penalty ID"}), 400
-    if not re.match(r'^[0-9]+', str(participant_id)):
-        return jsonify({"status": "error", "message": "Invalid participant ID"}), 400
-    if action != 'add' and action != 'subtract':
-        return jsonify({"status": "error", "message": "Invalid action"}), 400
-    if not GameEntity.query.filter_by(user_id=current_user.id,id=game_id).first():
-        return jsonify({"status": "error", "message": "Invalid Game"}), 400
+    penalty_id, participant_id, action, game_id = validate_quantity_input(request.json)
     logger.debug("Quantity Update from user {}, retrieved penalty_id: {}, participant_id: {},action: {} and game_id {}".format(current_user.email,penalty_id,participant_id,action,game_id))
     # take the PenaltyRecord from the database belonging to the participant for this exact penalty
     target_PenaltyRecordEntity = PenaltyRecordEntity.query.filter_by(game_id=game_id, penalty_id=penalty_id, participant_id=participant_id).first()
@@ -217,12 +204,12 @@ def update_quantity():
         # remove FineEntity of quantity_update issuer, only the other should be updated
         total_fine_entities = [entity for entity in total_fine_entities if entity.participant_id != int(participant_id)]
         update_inverted_quantity(target_PenaltyRecordEntity,total_fine_entities, action)
+        logger.debug("Updated inverted_quantity")
         db.session.add(target_PenaltyRecordEntity)
         db.session.commit()
         return redirect(url_for('views.view_game', game_id = game_id))
     if update_quantity_and_total_fine(target_PenaltyRecordEntity, total_fine, action):
         logger.debug("Gesamtbetrag fuer {} auf {} geaendert".format(current_user.email,total_fine.get_total_pay_amount()))
-        # commit all to database
         db.session.add(target_PenaltyRecordEntity)
         db.session.add(total_fine)
         db.session.commit()

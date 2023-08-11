@@ -14,13 +14,12 @@ function updateQuantity(id) {
     isInvert,
     allParticipants,
   ] = id.split("-");
-
-  const targetId = `${gameId}-${penaltyId}-${participantId}-${payAmount}-penalty-quantity`;
+  console.log(id.split("-"))
+  const targetId = `${gameId}-${penaltyId}-${participantId}-${payAmount}-penalty-quantity`; // Field displaying the quantity for a penalty. One for each penalty for each participant
   const targetElement = document.getElementById(targetId);
-  const totalFineElements = document.querySelectorAll(`[id$="-total-fine"]`);
 
   // Function to handle add and subtract actions
-  function handleAction(element, amount) {
+  function handleQuantity(element) {
     const currentValue = parseInt(element.innerHTML, 10);
 
     if (action === "add" && currentValue + 1 >= 0) {
@@ -29,21 +28,31 @@ function updateQuantity(id) {
       element.innerHTML = currentValue - 1;
     }
   }
-
+  // Penalty is inverted -> everyone except the Participant who got the penalty should receive a totalFine update, the calling participant only gets quantity increase
   if (isInvert && allParticipants) {
-    // XXX If this is inverted the handleAction must be called for each participant (except the participant who invoked updateQuantity). Each time targetElement has to be adjusted with the new ParticipantId
-    handleAction(targetElement, parseFloat(payAmount));
+    // Update quantity for the callingParticipant
+    handleQuantity(targetElement);
+    
+// Get all total fine elements of all participants except the calling participant
+    const totalFineElementsToUpdate = [];
+    JSON.parse(allParticipants).forEach((id => {
+      console.log("Update for all participants",id);
+      if (id != participantId) {
+        const selector = `${gameId}-${id}-total-fine`;
+        const element = document.getElementById(selector);
+        
+      if (element) {
+        totalFineElementsToUpdate.push(element);
+        console.log("TotalFineElements",totalFineElementsToUpdate)
+      }
+    }
+    }));
 
-    // Update total fine elements for all participants except the current participant
-    totalFineElements.forEach((element) => {
-      const elementId = element.getAttribute("id");
-      const currentParticipantTotalFineId = `${gameId}-${participantId}-total-fine`;
-
-      if (elementId === currentParticipantTotalFineId) {
+// Update total fine elements for all participants except the calling participant
+    totalFineElementsToUpdate.forEach((element) => {
         const currentTotalFine = parseFloat(
           removeNonNumeric(element.innerHTML)
         );
-
         if (action === "add") {
           element.innerHTML = `${(
             currentTotalFine + parseFloat(payAmount)
@@ -53,19 +62,17 @@ function updateQuantity(id) {
             currentTotalFine - parseFloat(payAmount)
           ).toFixed(2)}€`;
         }
-      }
     });
+  // Penalty is not inverted -> calling participant gets quantity increase and his totalFine increased
   } else {
-    handleAction(targetElement, parseFloat(payAmount));
-    const currentParticipantTotalFineId = `${gameId}-${participantId}-total-fine`;
+    handleQuantity(targetElement);
+    const currParticipantTotalFineId = `${gameId}-${participantId}-total-fine`; // Id of the totalFine field 
+    const currPartTotalFine = document.getElementById(currParticipantTotalFineId);
+    const currPartTotalFineValue = parseFloat(removeNonNumeric(currPartTotalFine.innerHTML))
     if (action === "add") {
-      element.innerHTML = `${(currentTotalFine + parseFloat(payAmount)).toFixed(
-        2
-      )}€`;
+      currPartTotalFine.innerHTML = `${(currPartTotalFineValue + parseFloat(payAmount)).toFixed(2)}€`;
     } else if (action === "subtract") {
-      element.innerHTML = `${(currentTotalFine - parseFloat(payAmount)).toFixed(
-        2
-      )}€`;
+      currPartTotalFine.innerHTML = `${(currPartTotalFineValue - parseFloat(payAmount)).toFixed(2)}€`;
     }
   }
 
@@ -88,8 +95,9 @@ function updateQuantity(id) {
   );
 }
 
-let currentRow = null;
 
+
+let currentRow = null;
 // Function to toggle the display of user penalties
 function toggleUserPenalties(tableCellId) {
   if (currentRow !== null && currentRow[0].id === tableCellId) {
