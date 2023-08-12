@@ -19,6 +19,7 @@ content %}
     action="{{ url_for('configure.new_penalty') }}"
     method="POST"
   >
+  <div>
     <label for="title">Title: </label>
     <input
       type="text"
@@ -26,6 +27,9 @@ content %}
       name="title"
       class="form-control list-column"
     />
+
+  </div>
+  <div>
     <label for="pay_amount">Pay Amount:</label>
     <input
       type="text"
@@ -36,16 +40,18 @@ content %}
       title="Please enter a valid pay amount in the format 0.20 or 0,20"
       class="form-control list-column"
     />
+  </div>
     <div class="text-gray-500 mt-4">
-      Invert?
-    </div>
-          <input
-        class="checkbox"
-        type="checkbox"
-        id="invert"
-        name="invert"
-        title="Invert"
+      Invert? 
+      <input
+      class="checkbox"
+      type="checkbox"
+      id="invert"
+      name="invert"
+      title="Invert"
       />
+      <br>(alle anderen müssen Zahlen)
+    </div>
     <button class="list-column mt-4 btn btn-primary" type="submit">
       Create Penalty
     </button>

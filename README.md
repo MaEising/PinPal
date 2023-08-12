@@ -7,6 +7,7 @@
 - penalty Seite (und andere?) umdesignen: aussehen wie [hier](https://www.rockanutrition.de/pages/kalorienrechner-app#/step2). Ggf in Figma Linux zuerst anlegen
 - error handling und validierung implementieren
 - große funktionen kleiner machen
+- Game summary Seite aufhübschen, vielleicht nur eine Tabelle und rot markieren wer wo am meisten hat 
 
 ### Work in Progress:
 

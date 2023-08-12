@@ -1,6 +1,7 @@
 {% extends "base.html" %} {% block title %} Kegelabend {{
 game.date_created.strftime('%Y-%m-%d') }} {% endblock %} {% block content %}
 <script src="/static/js/game_configuration.js"></script>
+<script src="/static/js/NoSleep.js"></script>
 <table class="table table-responsive">
   <thead>
     <tr class="text-center text-style">
@@ -88,7 +89,7 @@ game.date_created.strftime('%Y-%m-%d') }} {% endblock %} {% block content %}
   action="{{ url_for('configure.finish_game', game_id = game.id) }}"
   method="POST"
 >
-  <button type="submit" class="mb-4 game-finish-btn btn-primary">
+  <button onclick="noSleep.disable()" type="submit" class="mb-4 game-finish-btn btn-primary">
     Abend beenden
   </button>
 </form>
