@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-import random
 
 # Für Jeden User muss Jede Strafe als Objekt angelegt werden,
 # diese dann in eine Liste joinen und dem PenaltyRecord Objekt übergeben
@@ -10,6 +9,7 @@ class Penalty:
     penalty_name: str
     penalty_amount: float
     penalty_quantity: int
+    invert: bool
 
 # Ein Penalty Record enthält alle Strafen + Quantity für einen User
 # Im Views Endpoint wird dann für jeden User ein PenaltyRecord übergeben

@@ -120,9 +120,11 @@ class TotalFineEntity(db.Model):
 
     def add_value(self, penalty_amount: float):
         self.total_pay_amount += penalty_amount
+        self.total_pay_amount = round(self.total_pay_amount,2)
 
     def subtract_value(self, penalty_amount: float):
         self.total_pay_amount -= penalty_amount
+        self.total_pay_amount = round(self.total_pay_amount,2)
 
     def reset_total_pay_amount(self):
         self.total_pay_amount = 0

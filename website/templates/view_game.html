@@ -1,6 +1,7 @@
 {% extends "base.html" %} {% block title %} Kegelabend {{
 game.date_created.strftime('%Y-%m-%d') }} {% endblock %} {% block content %}
 <script src="/static/js/game_configuration.js"></script>
+<script src="/static/js/NoSleep.js"></script>
 <table class="table table-responsive">
   <thead>
     <tr class="text-center text-style">
@@ -37,7 +38,11 @@ game.date_created.strftime('%Y-%m-%d') }} {% endblock %} {% block content %}
         </div>
         <button
           id="{{player_record.game_id}}-{{ penalty.id}}-{{player_record.participant_id}}-add"
-          onclick="update_quantity('{{ player_record.game_id }}-{{ penalty.id}}-{{player_record.participant_id}}-{{penalty.penalty_amount}}-add')"
+          {% if not penalty.invert %}
+          onclick="updateQuantity('{{ player_record.game_id }}-{{ penalty.id}}-{{player_record.participant_id}}-{{penalty.penalty_amount}}-add-{{ penalty.invert }}')"
+          {% else %}
+          onclick="updateQuantity('{{ player_record.game_id }}-{{ penalty.id}}-{{player_record.participant_id}}-{{penalty.penalty_amount}}-add-{{ penalty.invert }}-{{all_participant_ids}}')"
+          {% endif %}
           class="quantity-up-button"
           style="height: 40px; width: 40px; background-color: lightgreen"
           type="submit"
@@ -45,8 +50,20 @@ game.date_created.strftime('%Y-%m-%d') }} {% endblock %} {% block content %}
           &#43;
         </button>
         <button
-          id="{{player_record.game_id}}-{{ penalty.id}}-{{player_record.participant_id}}-subtract"
-          onclick="update_quantity('{{ player_record.game_id }}-{{ penalty.id}}-{{player_record.participant_id}}-{{penalty.penalty_amount}}-subtract')"
+          id="{{player_record.game_id}}-{{ penalty.id}}-{{player_record.participant_id}}-subtract-{{ penalty.invert }}"
+          {%
+          if
+          not
+          penalty.invert
+          %}
+          onclick="updateQuantity('{{ player_record.game_id }}-{{ penalty.id}}-{{player_record.participant_id}}-{{penalty.penalty_amount}}-subtract-{{ penalty.invert }}')"
+          {%
+          else
+          %}
+          onclick="updateQuantity('{{ player_record.game_id }}-{{ penalty.id}}-{{player_record.participant_id}}-{{penalty.penalty_amount}}-subtract-{{ penalty.invert }}-{{all_participant_ids}}')"
+          {%
+          endif
+          %}
           class="quantity-down-button"
           style="height: 40px; width: 40px; background-color: #f87217"
           type="submit"
@@ -72,7 +89,7 @@ game.date_created.strftime('%Y-%m-%d') }} {% endblock %} {% block content %}
   action="{{ url_for('configure.finish_game', game_id = game.id) }}"
   method="POST"
 >
-  <button type="submit" class="mb-4 game-finish-btn btn-primary">
+  <button onclick="noSleep.disable()" type="submit" class="mb-4 game-finish-btn btn-primary">
     Abend beenden
   </button>
 </form>

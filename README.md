@@ -7,13 +7,14 @@
 - penalty Seite (und andere?) umdesignen: aussehen wie [hier](https://www.rockanutrition.de/pages/kalorienrechner-app#/step2). Ggf in Figma Linux zuerst anlegen
 - error handling und validierung implementieren
 - große funktionen kleiner machen
+- Game summary Seite aufhübschen, vielleicht nur eine Tabelle und rot markieren wer wo am meisten hat 
 
 ### Work in Progress:
 
 - Logging in jeder funktion unterbringen (info) warning / debug im laufe des codes und an stellen wo prints gesetzt sind
-- invert erzeugt eine Db PenaltyEntity die denn boolean Wert ob invertiert werden soll oder nicht enthält. Logik muss gebaut werden um beim Update Quantity call rauszufinden ob die Strafe invertiert ist. Falls dem so ist müssen die totalfine records mit dem payamount diese Strafe aller _anderen_ participants zu / ab gerechnet werden. Die Quantity wird dennoch beim Spieler der die "Strafe" geworfen hat eingetragen.
-- Usability verbessern und media responsive design implementieren: auf der view game Seite werden die {{player_record.participant_name}}s neben dem Playeravatar angezeigt obwohl sie mit in den player square sollen. Fix implementieren
-
+- im Branch inverted_penalties die invert penalty funktion zu Ende bauen. Aktueller Stand:
+    * im backend werden die Penalties korrekt addiert / subtrahiert (siehe output )
+    * normale Strafen werden aktuell nicht ausgeführt,
 ### IDEAS
 
 - kleines Fragezeichen oder so neben den Button den man als Erklärung dann anklicken kann

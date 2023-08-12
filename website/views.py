@@ -56,12 +56,14 @@ def view_game(game_id):
         flash("invalid game", category="error")
         return render_template("create_or_load_game.html", user=current_user)
     logger.info("Game Status for user {} is {}".format(current_user.email,game.status))
+    all_participant_ids = []
     if game.status == GameStatus.active:
         participants_data = []
         # Iterate through all participant ids
         # Get all their PenaltyRecordEntities from database
         # Get their TotalFine from database
         for player in json.loads(game_participants):
+            all_participant_ids.append(int(player))
             participant_record = PenaltyRecordEntity.query.filter_by(game_id=game.id, participant_id=player).first()
             participant_fine_sum = TotalFineEntity.query.filter_by(game_id=game.id, participant_id=player).first()
             # Map the Database Entities to useful data_models, a single object that stores everything needed for the player
@@ -71,10 +73,12 @@ def view_game(game_id):
     if game.status == GameStatus.save:
         participants_data = []
         for player in json.loads(game_participants):
+            all_participant_ids.append(player)
             participant_records = PenaltyRecordEntity.query.filter_by(game_id=game.id, participant_id=player).all()
             participant_fine_sum = TotalFineEntity.query.filter_by(game_id=game.id, participant_id=player).first()
             participants_data.append(map_to_game_summary(participant_records, participant_fine_sum))
-    return render_template("view_game.html",user=current_user, game=game, all_penalties=all_penalties, player_record_list = participants_data)
+        logger.debug("All participant_ids going into the game: ", all_participant_ids)
+    return render_template("view_game.html",user=current_user, game=game, all_penalties=all_penalties, player_record_list = participants_data, all_participant_ids=all_participant_ids)
 
 # Display finished game summary
 @views.route('/game_summary/<game_id>', methods=['POST','GET'])

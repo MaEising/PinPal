@@ -1,7 +1,7 @@
 from . import db
 from .models import GameEntity,GameStatus, PenaltyEntity, PenaltyRecordEntity,ParticipantStatus, ParticipantEntity, TotalFineEntity
 from .sanitize_inputs import sanitize_pay_amount, sanitize_participant_ids, sanitize_participant_id, sanitize_string
-from .validate_inputs import delete_game_check, validate_gameid
+from .validate_inputs import delete_game_check, validate_gameid, validate_quantity_input
 from flask import Blueprint, render_template, request, flash, redirect, url_for, abort, jsonify
 from flask_login import login_required, current_user
 from .logger_config import setup_logger
@@ -87,8 +87,6 @@ def delete_participant(participant_id):
 
 
 ###* GAME SECTION 
-# TODO move this into seperate game configuration file
-
 @configure.route('/new_game', methods=['POST'])
 @login_required
 def new_game():
@@ -137,10 +135,12 @@ def new_penalty():
         sanitize_pay_amount(pay_amount)
         title = request.form.get('title')
         title = sanitize_string(title)
-        if request.form.get('is_invert'):
+        if request.form.get('invert'):
             penalty = PenaltyEntity(pay_amount = pay_amount, title = title, user_id = current_user.id, invert=True)
+            logger.info("User {} created new inverted penalty".format(current_user.id))
         else:
             penalty = PenaltyEntity(pay_amount = pay_amount, title = title, user_id = current_user.id)
+            logger.info("User {} created new penalty".format(current_user.id))
     db.session.add(penalty)
     db.session.commit()
     all_penalties = PenaltyEntity.query.filter_by(user_id=current_user.id).all
@@ -162,18 +162,16 @@ def update_quantity_and_total_fine(target_PenaltyRecordEntity, total_fine, actio
     is_performed = False
     if action == 'add':
         target_PenaltyRecordEntity.quantity += 1
-        if not target_PenaltyRecordEntity.penalty.invert:
-            total_fine.add_value(target_PenaltyRecordEntity.penalty.pay_amount)
+        total_fine.add_value(target_PenaltyRecordEntity.penalty.pay_amount)
         is_performed = True
     elif action == 'subtract' and target_PenaltyRecordEntity.quantity >= 1:
         target_PenaltyRecordEntity.quantity -= 1
-        if not target_PenaltyRecordEntity.penalty.invert:
-            total_fine.subtract_value(target_PenaltyRecordEntity.penalty.pay_amount)
+        total_fine.subtract_value(target_PenaltyRecordEntity.penalty.pay_amount)
         is_performed = True
+    logger.debug("TotalFine for {} updated to {}".format(current_user.id,total_fine.total_pay_amount))
     return is_performed
 
 # Increase the quantity inside target_PenaltyRecordEntity, increase / decrease all_other_total_fines with the target_PenaltyRecordEntity.penalty.pay_amount
-# XXX Find a more pythonic way to write this, the if statements look ugly af
 def update_inverted_quantity(target_PenaltyRecordEntity, all_other_total_fines ,action):
     if action == 'add':
         target_PenaltyRecordEntity.quantity += 1
@@ -193,49 +191,31 @@ def update_inverted_quantity(target_PenaltyRecordEntity, all_other_total_fines ,
 # Updates the given PenaltyRecord.penalty.quantity for one participant inside a game, writes the changes to the PenaltyRecordEntity database object
 # also the total_fine the participant has to pay is updated inside the database
 def update_quantity():
-    is_performed = False
     if request.method != 'POST':
         abort(405)
-    data = request.json
-    penalty_id = data.get("penaltyId")
-    participant_id = data.get("participantId")
-    action = data.get("action")
-    game_id = data.get("game_id")
-    # Validate input data
-    if not re.match(r'^[0-9]+', str(game_id)):
-        return jsonify({"status": "error", "message": "Invalid game ID"}), 400
-    if not re.match(r'^[0-9]+', str(penalty_id)):
-        return jsonify({"status": "error", "message": "Invalid penalty ID"}), 400
-    if not re.match(r'^[0-9]+', str(participant_id)):
-        return jsonify({"status": "error", "message": "Invalid participant ID"}), 400
-    if action != 'add' and action != 'subtract':
-        return jsonify({"status": "error", "message": "Invalid action"}), 400
-    if not GameEntity.query.filter_by(user_id=current_user.id,id=game_id).first():
-        return jsonify({"status": "error", "message": "Invalid Game"}), 400
+    penalty_id, participant_id, action, game_id = validate_quantity_input(request.json)
     logger.debug("Quantity Update from user {}, retrieved penalty_id: {}, participant_id: {},action: {} and game_id {}".format(current_user.email,penalty_id,participant_id,action,game_id))
     # take the PenaltyRecord from the database belonging to the participant for this exact penalty
     target_PenaltyRecordEntity = PenaltyRecordEntity.query.filter_by(game_id=game_id, penalty_id=penalty_id, participant_id=participant_id).first()
     total_fine = TotalFineEntity.query.filter_by(game_id=game_id, participant_id=participant_id).first()
     # Update the quantity inside the Database depending on the chosen action in the frontend. Make sure the quantity is not negative
-    logger.debug("This is the whole target_penaltyRecordEntity check where the invert bool is: {}".format(target_PenaltyRecordEntity.penalty.invert))
     if target_PenaltyRecordEntity.penalty.invert:
-        print("Target Participant id is:",participant_id)
         total_fine_entities = TotalFineEntity.query.filter_by(game_id=game_id).all()
         # remove FineEntity of quantity_update issuer, only the other should be updated
         total_fine_entities = [entity for entity in total_fine_entities if entity.participant_id != int(participant_id)]
         update_inverted_quantity(target_PenaltyRecordEntity,total_fine_entities, action)
+        logger.debug("Updated inverted_quantity")
         db.session.add(target_PenaltyRecordEntity)
         db.session.commit()
+        return redirect(url_for('views.view_game', game_id = game_id))
     if update_quantity_and_total_fine(target_PenaltyRecordEntity, total_fine, action):
         logger.debug("Gesamtbetrag fuer {} auf {} geaendert".format(current_user.email,total_fine.get_total_pay_amount()))
-        # commit all to database
         db.session.add(target_PenaltyRecordEntity)
         db.session.add(total_fine)
         db.session.commit()
     return redirect(url_for('views.view_game', game_id = game_id))
 
 # Sets the TotalFineEntity payamount of a participant by adding up all quantities * the penalty pay amount of all penalties
-
 @configure.route('/delete_game/<int:game_id>', methods=['POST'])
 @login_required
 def delete_game(game_id):
@@ -280,8 +260,34 @@ def finish_game(game_id):
 # Generate some initial penelties on user creation for better experience 
 # called on user creation in auth.py
 def initial_object_generation(user_id,username):
-    db.session.add(PenaltyEntity(pay_amount=0.40,title="Rinne",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=0.30,title="Rinne",user_id=user_id))
     db.session.add(PenaltyEntity(pay_amount=1.00,title="Klingel",user_id=user_id))
-    db.session.add(PenaltyEntity(pay_amount=1.00,title="Ochsengasse",user_id=user_id))
-    db.session.add(ParticipantEntity(username=username,user_id=user_id,status=ParticipantStatus.active))
+    db.session.add(PenaltyEntity(pay_amount=0.30,title="Ochsengasse",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=0.50,title="Wurf verpennt",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=0.50,title="Falsch anschreiben",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=1.50,title="Spiel verloren",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=3.00,title="Mutter beleidigen",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=3.00,title="alle Neune",user_id=user_id,invert=True))
+    db.session.add(PenaltyEntity(pay_amount=2.00,title="Kranz",user_id=user_id,invert=True))
+    db.session.add(PenaltyEntity(pay_amount=5.00,title="Kugel fallen lassen",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=2.00,title="Aus der Rinne",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=3.00,title="Kugel abfangen",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=5.00,title="Rauchen vor Pause",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=1.00,title="Trinken vor anstoßen",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=5.00,title="Gegenstand als Projektil",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=4.00,title="Glas umwerfen",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=50.0,title="Unentschuldigtes fehlen",user_id=user_id))
+    db.session.add(PenaltyEntity(pay_amount=1.00,title="Minuten verspätet",user_id=user_id))
+    db.session.add(ParticipantEntity(username = "Derksen", user_id=user_id, status=ParticipantStatus.active))
+    db.session.add(ParticipantEntity(username = "Kemmi", user_id=user_id, status=ParticipantStatus.active))
+    db.session.add(ParticipantEntity(username = "Benno", user_id=user_id, status=ParticipantStatus.active))
+    db.session.add(ParticipantEntity(username = "Marci", user_id=user_id, status=ParticipantStatus.active))
+    db.session.add(ParticipantEntity(username = "Nb9", user_id=user_id, status=ParticipantStatus.active))
+    db.session.add(ParticipantEntity(username = "Nikki", user_id=user_id, status=ParticipantStatus.active))
+    db.session.add(ParticipantEntity(username = "Lukaslol", user_id=user_id, status=ParticipantStatus.active))
+    db.session.add(ParticipantEntity(username = "Matthis", user_id=user_id, status=ParticipantStatus.active))
+    db.session.add(ParticipantEntity(username = "Mats", user_id=user_id, status=ParticipantStatus.active))
+    db.session.add(ParticipantEntity(username = "Gerry", user_id=user_id, status=ParticipantStatus.active))
+    db.session.add(ParticipantEntity(username = "Johnny", user_id=user_id, status=ParticipantStatus.active))
+    db.session.add(ParticipantEntity(username = "Heinrich", user_id=user_id, status=ParticipantStatus.active))
     db.session.commit()

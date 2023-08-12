@@ -4,7 +4,7 @@ import random
 def map_penalties(all_penalties, quantity=0):
     penalties = []
     for penalty_entity in all_penalties:
-        penalties.append(Penalty(penalty_entity.id,penalty_entity.title,penalty_entity.pay_amount,quantity))
+        penalties.append(Penalty(penalty_entity.id,penalty_entity.title,penalty_entity.pay_amount,quantity,penalty_entity.invert))
     return penalties
 
 def map_penalty_records(PenaltyRecord_of_player, game_id, all_penalties,participant_total_fine):
@@ -22,5 +22,5 @@ def map_to_game_summary(all_penalty_records_of_player, participant_total_fine):
     return final_penalty_record
 
 def map_penalty_record_for_game_summary(penalty_record):
-    penalty_summary = Penalty(penalty_record.id,penalty_record.penalty.title,penalty_record.penalty.pay_amount,penalty_record.quantity)
+    penalty_summary = Penalty(penalty_record.id,penalty_record.penalty.title,penalty_record.penalty.pay_amount,penalty_record.quantity,penalty_record.penalty.invert)
     return penalty_summary
